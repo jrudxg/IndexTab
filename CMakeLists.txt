@@ -4,6 +4,8 @@ project(IndexTab VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(CMAKE_AUTORCC on)
+
 find_package(Qt6 REQUIRED COMPONENTS Quick)
 
 qt_standard_project_setup(REQUIRES 6.5)
@@ -12,11 +14,29 @@ qt_add_executable(appIndexTab
     main.cpp
 )
 
+set_source_files_properties(LastProjectModel.qml
+    PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
+
+
 qt_add_qml_module(appIndexTab
     URI IndexTab
     VERSION 1.0
     QML_FILES
         Main.qml
+	QML_FILES FileFolder.qml
+        QML_FILES Menubar.qml
+        QML_FILES HomeScreen.qml
+	QML_FILES OpenFolderDialog.qml
+	QML_FILES CreateFolderDialog.qml
+	QML_FILES HomeToolbar.qml
+	QML_FILES ToolbarLinks.qml
+	QML_FILES ProjectButtons.qml
+	QML_FILES ClickableTextImage.qml
+	QML_FILES LastProjectModel.qml
+	SOURCES foldermanager.h foldermanager.cpp
+	SOURCES foldermodel.h foldermodel.cpp
+	SOURCES flashcard.h flashcard.cpp
+	RESOURCES resource.qrc
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
