@@ -1,6 +1,9 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
+#include <QtGui>
+#include <QtCore>
+
 #include "flashcard.h"
 #include "folderModel.h"
 #include "foldermanager.h"
@@ -25,7 +28,7 @@ int main(int argc, char *argv[])
         &app,
         []() { QCoreApplication::exit(-1); },
         Qt::QueuedConnection);
-    engine.loadFromModule("IndexTab", "Main");
+    engine.load(QUrl(QStringLiteral("IndexTab/Main.qml")));
 
 
     return app.exec();

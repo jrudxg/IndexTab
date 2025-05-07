@@ -2,7 +2,6 @@
 #define FLASHCARD_H
 
 #include <QtCore>
-#include <QtGui>
 
 
 class FlashCard: public QAbstractListModel

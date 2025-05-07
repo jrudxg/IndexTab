@@ -44,7 +44,7 @@ Item {
     id: folderModel
 
         Component.onCompleted: {
-            if (!folderManager.doesFileExist("a" + settings.projectsLocation)) folderDialog.open()
+            if (!folderManager.doesFileExist(settings.projectsLocation)) folderDialog.open()
             addFromFolderPath(settings.projectsLocation)
         }
     }

@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Layouts
 
 Window {
     width: 3840
@@ -9,7 +8,7 @@ Window {
     title: qsTr("Hello World")
 
     visibility: Window.Maximized
-
+/*
     Menubar {
         id: menuBar
         onHomeButtonClicked: pageLoader.source = "HomeScreen.qml"
@@ -21,10 +20,10 @@ Window {
         onSettingsButtonClicked: pageLoader.sourceComponent = settingsScreen
 
     }
+*/
     Loader {
         id: pageLoader
-        anchors.left: menuBar.right
-        anchors.right: parent.right
+        anchors.fill: parent
         height: parent.height
         source:  "HomeScreen.qml"
     }

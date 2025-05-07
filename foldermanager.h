@@ -2,7 +2,6 @@
 #define FOLDERMANAGER_H
 
 #include <QtCore>
-#include <QtGui>
 
 class FolderManager : public QObject
 {

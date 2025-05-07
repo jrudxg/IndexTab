@@ -2,7 +2,6 @@
 #define FOLDERMODEL_H
 
 #include <QtCore>
-#include <QtGui>
 
 class FolderModel : public QAbstractListModel
 {

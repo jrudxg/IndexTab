@@ -1,6 +1,8 @@
 #include "folderModel.h"
 #include "foldermanager.h"
 
+#include <QtGui/QDesktopServices>
+
 FolderModel::FolderModel(QObject *parent)
     : QAbstractListModel(parent) {}
 

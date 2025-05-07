@@ -24,8 +24,8 @@ qt_add_qml_module(appIndexTab
     QML_FILES
         Main.qml
 	QML_FILES FileFolder.qml
-        QML_FILES Menubar.qml
-        QML_FILES HomeScreen.qml
+	QML_FILES Menubar.qml
+	QML_FILES HomeScreen.qml
 	QML_FILES OpenFolderDialog.qml
 	QML_FILES CreateFolderDialog.qml
 	QML_FILES HomeToolbar.qml
