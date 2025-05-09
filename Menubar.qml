@@ -27,7 +27,7 @@ Item {
     }
 
     signal homeButtonClicked
-    signal menuButtonClicked
+    signal editButtonClicked
     signal playButtonClicked
     signal settingsButtonClicked
 
@@ -48,7 +48,7 @@ Item {
                 source: "qrc:/images/home.svg"
             }
             ListElement {
-                name: "Menu"
+                name: "Edit"
                 source: "qrc:/images/menu.svg"
             }
             ListElement {
@@ -75,7 +75,7 @@ Item {
             scale: 1.2
             onButtonPressed: {
                 name === "Home" ? homeButtonClicked() :
-                name === "Menu" ? menuButtonClicked() :
+                name === "Edit" ? editButtonClicked() :
                 name === "Play" ? playButtonClicked() :
                 settingsButtonClicked()
             }

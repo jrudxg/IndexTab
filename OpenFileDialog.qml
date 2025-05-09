@@ -6,19 +6,20 @@ import Qt.labs.folderlistmodel
 Item {
 
     function open() {
-        folderDialog.open()
+        fileDialog.open()
     }
 
     signal projectOpened(project: string)
 
 
-    FolderDialog {
-        id: folderDialog
+    FileDialog {
+        id: fileDialog
         title: "Ordner auswählen"
+        nameFilters: ["Text files (*.txt)"]
         currentFolder: LastProjectModel.projectsFolderLocation
 
         onAccepted: {
-            projectOpened(selectedFolder)
+            projectOpened(selectedFile)
         }
     }
 }

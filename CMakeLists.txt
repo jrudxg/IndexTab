@@ -26,15 +26,15 @@ qt_add_qml_module(appIndexTab
 	QML_FILES FileFolder.qml
 	QML_FILES Menubar.qml
 	QML_FILES HomeScreen.qml
-	QML_FILES OpenFolderDialog.qml
-	QML_FILES CreateFolderDialog.qml
+	QML_FILES OpenFileDialog.qml
+	QML_FILES CreateFileDialog.qml
 	QML_FILES HomeToolbar.qml
 	QML_FILES ToolbarLinks.qml
 	QML_FILES ProjectButtons.qml
 	QML_FILES ClickableTextImage.qml
 	QML_FILES LastProjectModel.qml
-	SOURCES foldermanager.h foldermanager.cpp
-	SOURCES foldermodel.h foldermodel.cpp
+	SOURCES filemanager.h filemanager.cpp
+	SOURCES filemodel.h filemodel.cpp
 	SOURCES flashcard.h flashcard.cpp
 	RESOURCES resource.qrc
 )

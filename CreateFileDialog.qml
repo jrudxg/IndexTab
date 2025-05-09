@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Dialogs
 import QtQuick.Controls
 
-import folder.manager
+import file.manager
 
 Item {
 
@@ -12,7 +12,7 @@ Item {
         folderDialog.open()
     }
 
-    signal folderCreated(project: string)
+    signal fileCreated(project: string)
 
     FolderDialog {
         id: folderDialog
@@ -21,13 +21,15 @@ Item {
         onAccepted: createDialog.open()
     }
 
-    FolderManager {
-        id: folderManager
+
+
+    FileManager {
+        id: fileManager
     }
 
     Dialog {
         id: createDialog
-        title: "Create folder"
+        title: "Create file"
         standardButtons: Dialog.Ok | Dialog.Cancel
         modal: true
 
@@ -36,12 +38,13 @@ Item {
         anchors.centerIn: Overlay.overlay
 
         onAccepted: {
-            var folderPath = folderManager.createFolder(folderDialog.selectedFolder, textInput.text)
+            var filePath = fileManager.createFile(folderDialog.selectedFolder, (textInput.text + ".txt"))
             if (parent.addToLastProjectModel) {
-                LastProjectModel.addNewFolder(folderPath)
+                LastProjectModel.addNewFile(filePath)
             }
-            folderCreated(folderPath)
+            fileCreated(filePath)
         }
+
 
         TextField {
             id: textInput

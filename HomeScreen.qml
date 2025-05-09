@@ -42,13 +42,13 @@ Item {
             Button {
                 height: parent.height
                 width: height
-                onClicked: LastProjectModel.removeFolder(model.source)
+                onClicked: LastProjectModel.removeFile(model.source)
             }
             ItemDelegate {
                 width: parent.width
                 height: parent.height
                 text: model.name + '\n' + model.source
-                onClicked: LastProjectModel.openFolder(model.source)
+                onClicked: LastProjectModel.openFile(model.source)
             }
         }
     }

@@ -5,16 +5,16 @@
 #include <QtCore>
 
 #include "flashcard.h"
-#include "folderModel.h"
-#include "foldermanager.h"
+#include "fileModel.h"
+#include "filemanager.h"
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
     qmlRegisterType<FlashCard>("flashcard.model", 1, 0, "Flashcard");
-    qmlRegisterType<FolderModel>("folder.model", 1, 0, "FolderModel");
-    qmlRegisterType<FolderManager>("folder.manager", 1, 0, "FolderManager");
+    qmlRegisterType<FileModel>("file.model", 1, 0, "FileModel");
+    qmlRegisterType<FileManager>("file.manager", 1, 0, "FileManager");
 
 
     QCoreApplication::setOrganizationDomain("MyCompany");
