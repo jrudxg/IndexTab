@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls
-
+import sceneData.model
 Window {
     width: 3840
     height: 2160
@@ -38,18 +38,19 @@ Window {
         onEditButtonClicked: pageLoader.sourceComponent = editScreen
 
         onPlayButtonClicked: pageLoader.sourceComponent = playScreen
-
         onSettingsButtonClicked: pageLoader.sourceComponent = settingsScreen
 
     }
+
 
     Loader {
         id: pageLoader
         anchors.left: menuBar.right
         width: parent.width - menuBar.width
         height: parent.height
-        source:  "HomeScreen.qml"
-    }
+        ///source: "HomeScreen.qml"
+        sourceComponent: settingsScreen
+    } 
 
     Component {
         id: noFileEditScreen
@@ -74,6 +75,7 @@ Window {
             anchors.fill: parent
 
             color: "white"
+
 
             TextEdit {
                 id: textEdit
@@ -102,6 +104,7 @@ Window {
             Text {
                 anchors {
                     right: parent.right
+                    rightMargin: 5
                     top:  parent.top
                 }
 
@@ -134,24 +137,24 @@ Window {
         }
     }
 
-Component {
-    id: textFileEditor
-
-}
-
     Component {
         id: playScreen
-        Rectangle {
-            anchors.fill: parent
-            color: Qt.lighter("gray", 1.1)
+        Loader {
+            data: SceneDataModel.currentScene
         }
+
     }
 
     Component {
         id: settingsScreen
         Rectangle {
+            color: Qt.lighter("lightgray", 1.1)
             anchors.fill: parent
-            color: Qt.lighter("gray", 1.2)
+            Table{
+                id: table
+                anchors.centerIn: parent
+            }
         }
+
     }
 }

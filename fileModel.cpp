@@ -1,10 +1,8 @@
 #include "fileModel.h"
-#include "Filemanager.h"
+#include "filemanager.h"
 
 #include <QDesktopServices>
-
-FileModel::FileModel(QObject *parent)
-    : QAbstractListModel(parent) {}
+#include <QDirIterator>
 
 bool FileModel::addFromFolderPath(QString path) {
 
@@ -22,7 +20,7 @@ bool FileModel::addFromFolderPath(QString path) {
 bool FileModel::addNewFileToModel(QString path) {
     if (!path.contains('/')) return false;
 
-    for (const auto data : m_data) {
+    for (auto &data : std::as_const(m_data)) {
         if (path == data.second) return false;
     }
     QString projectName = path.section('/', -1);
@@ -55,7 +53,7 @@ bool FileModel::removeFile(QString path) {
 QString FileModel::getTextFromModelEntry(QString fileSource) const {
 
     fileSource.remove("file:///");
-    for (auto data : m_data) {
+    for (auto &data : std::as_const(m_data)) {
 
         if (fileSource == data.second) {
 
@@ -72,7 +70,7 @@ QString FileModel::getTextFromModelEntry(QString fileSource) const {
 bool FileModel::saveTextToModelEntry(const QString &text, QString fileSource) const {
 
     fileSource.remove("file:///");
-    for (auto data : m_data) {
+    for (auto &data : std::as_const(m_data)) {
 
         if (fileSource == data.second) {
 
@@ -105,10 +103,8 @@ QVariant FileModel::data(const QModelIndex &index, int role) const {
     const auto entry = &m_data.at(index.row());
 
     switch(role) {
-        case NameRole:
-            return entry->first;
-        case SourceRole:
-            return entry->second;
+        case NameRole:   return entry->first;
+        case SourceRole: return entry->second;
     }
 
     return QVariant();

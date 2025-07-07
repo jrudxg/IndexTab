@@ -32,7 +32,7 @@ ListView {
 
 
         onClicked: name === "Create Project" ?
-        createFileDialog.open() :  openFileDialog.open()
+        createFileDialog.open(".txt") :  openFileDialog.open(["Project files (*.txt)"])
     }
 
     OpenFileDialog {
@@ -46,3 +46,4 @@ ListView {
         id: createFileDialog
     }
 }
+

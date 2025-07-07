@@ -1,14 +1,16 @@
 #ifndef FILEMANAGER_H
 #define FILEMANAGER_H
 
-#include <QtCore>
+#include <QObject>
+#include <QDir>
 
 class FileManager : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit FileManager(QObject *parent = nullptr);
+    explicit FileManager(QObject *parent = nullptr)
+    : QObject(parent) {}
 
     // returns the folder path from the folder created
     // if no folder is created, it returns an empty QString

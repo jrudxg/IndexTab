@@ -1,14 +1,15 @@
 #ifndef FILEMODEL_H
 #define FILEMODEL_H
 
-#include <QtCore>
+#include <QModelIndex>
 
 class FileModel : public QAbstractListModel
 {
     Q_OBJECT
 
 public:
-    explicit FileModel(QObject *parent = nullptr);
+    explicit FileModel(QObject *parent = nullptr)
+    : QAbstractListModel(parent) {}
 
     enum LastProjectRoles {
         NameRole = Qt::UserRole + 1,

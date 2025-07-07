@@ -5,7 +5,8 @@ import Qt.labs.folderlistmodel
 
 Item {
 
-    function open() {
+    function open(customNameFiltes) {
+        fileDialog.nameFilters = customNameFiltes
         fileDialog.open()
     }
 
@@ -15,7 +16,8 @@ Item {
     FileDialog {
         id: fileDialog
         title: "Ordner auswählen"
-        nameFilters: ["Text files (*.txt)"]
+        nameFilters: ["All files (*)"]
+
         currentFolder: LastProjectModel.projectsFolderLocation
 
         onAccepted: {

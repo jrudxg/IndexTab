@@ -22,6 +22,7 @@ qt_add_qml_module(appIndexTab
     URI IndexTab
     VERSION 1.0
     QML_FILES
+        RESOURCES resource.qrc
         Main.qml
 	QML_FILES FileFolder.qml
 	QML_FILES Menubar.qml
@@ -35,8 +36,15 @@ qt_add_qml_module(appIndexTab
 	QML_FILES LastProjectModel.qml
 	SOURCES filemanager.h filemanager.cpp
 	SOURCES filemodel.h filemodel.cpp
-	SOURCES flashcard.h flashcard.cpp
-	RESOURCES resource.qrc
+	SOURCES flashcardUtility.h flashcardUtility.cpp
+	SOURCES projectreader.h projectreader.cpp
+	SOURCES scenedatamodel.h scenedatamodel.cpp
+	QML_FILES Flashcard.qml
+	QML_FILES Scene.qml
+	QML_FILES SceneLink.qml
+	SOURCES scenelinkutility.h scenelinkutility.cpp
+	SOURCES generaltaskutility.h generaltaskutility.cpp
+	QML_FILES Table.qml
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

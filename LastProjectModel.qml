@@ -50,7 +50,6 @@ Item {
         property string sourceOfLastEditedProject: ""
     }
 
-
     FolderDialog {
         id: folderDialog
         title: qsTr("Choose folderpath to create folder")

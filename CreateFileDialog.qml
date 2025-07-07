@@ -8,7 +8,9 @@ Item {
 
     property bool addToLastProjectModel: true
 
-    function open() {
+    // extension needs to begin with .
+    function open(fileExtension)  {
+        createDialog.extension = fileExtension
         folderDialog.open()
     }
 
@@ -33,12 +35,14 @@ Item {
         standardButtons: Dialog.Ok | Dialog.Cancel
         modal: true
 
+        property string extension: ".txt"
+
         width: 500
         height: 500
         anchors.centerIn: Overlay.overlay
 
         onAccepted: {
-            var filePath = fileManager.createFile(folderDialog.selectedFolder, (textInput.text + ".txt"))
+            var filePath = fileManager.createFile(folderDialog.selectedFolder, (textInput.text + extension))
             if (parent.addToLastProjectModel) {
                 LastProjectModel.addNewFile(filePath)
             }

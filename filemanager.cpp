@@ -2,8 +2,6 @@
 
 FileManager* FileManager::fileManager_Singelton = 0;
 
-FileManager::FileManager(QObject *parent)
-    : QObject(parent) {}
 
 QString FileManager::createFolder(QString directory, QString folderName) const {
     QDir dir(directory.remove("file:///"));
@@ -20,8 +18,6 @@ QString FileManager::createFile(QString directory, QString fileName) const {
 
 
     QDir dir(directory.remove("file:///"));
-
-    qInfo() << dir.path() + "/" + fileName;
 
     if (dir.exists(fileName)) return QString();
 

@@ -1,7 +1,6 @@
 import QtQuick
 import QtQuick.Controls
 import QtQml.Models
-
 Item {
     id: root
     anchors.fill: parent
@@ -52,5 +51,6 @@ Item {
             }
         }
     }
+
 
 }
