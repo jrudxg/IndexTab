@@ -3,17 +3,10 @@
 
 #include <QObject>
 #include <QQmlApplicationEngine>
+#include <generaltaskutility.h>
 #include <QQmlEngine>
 #include <QQmlComponent>
 #include <QQuickItem>
-
-enum taskTypes {
-    Flashcard,
-    Table,
-    Link,
-    size,
-    unknown
-};
 
 class SceneDataModel : public QObject
 {
@@ -27,7 +20,7 @@ public:
     explicit SceneDataModel(QQmlApplicationEngine &engine, QObject *parent = nullptr);
 
     // adds an element to a scene and makes the scene its parent
-    void addElement(QString sceneName, taskTypes type, QVariantMap &map);
+    void addElement(QString sceneName, GeneralTaskUtility::taskTypes type, QVariantMap &map);
 
     void setCurrentScene(QObject* scene);
     Q_INVOKABLE bool setCurrentScenePerName(const QString newSceneName);
@@ -39,7 +32,7 @@ public:
 
     // a dictionary returning the task type of a given name.
     // Doesn't include any meta types like size or unknown.
-    static const QMap<QString, taskTypes> taskTypeDictionary;
+    static const QMap<QString, GeneralTaskUtility::taskTypes> taskTypeDictionary;
 
     static SceneDataModel* getInstance();
 
@@ -57,9 +50,9 @@ private:
     QQmlApplicationEngine* m_engine;
 
     // can't be out of bounds
-    static const QMap<taskTypes, std::function<void(QQmlComponent* component, QQuickItem* scene, QVariantMap &map)>> generateTaskDictionary;
+    static const QMap<GeneralTaskUtility::taskTypes, std::function<void(QQmlComponent* component, QQuickItem* scene, QVariantMap &map)>> generateTaskDictionary;
 
-    QMap<taskTypes, QQmlComponent*> taskComponents;
+    QMap<GeneralTaskUtility::taskTypes, QQmlComponent*> taskComponents;
 signals:
     void currentSceneChanged();
     Q_INVOKABLE void currentSceneNameChanged();

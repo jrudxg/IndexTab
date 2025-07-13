@@ -10,6 +10,9 @@ Rectangle {
     property string questionDescription: ""
     property string answerDescription: ""
 
+    Component.onCompleted: {
+        console.log("Hello")
+    }
 
     // approximately 14:9
     width: 400
@@ -55,7 +58,7 @@ Rectangle {
         acceptedButtons: Qt.RightButton
         onClicked: {
             topText.text = (topText.text === root.question ? FlashcardUtil.getcAnswerFromuAnswer(root.answer) : root.question)
-            bottom.text = (bottom.text === root.questionDescription ? root.answerDescription : root.questionDescription)
+            bottom.text = (bottomText.text === root.questionDescription ? root.answerDescription : root.questionDescription)
         }
     }
 }

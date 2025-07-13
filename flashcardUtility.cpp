@@ -45,7 +45,7 @@ const std::function<bool(QString, QVariantMap&)> FlashcardUtility::mapS = [](QSt
 
 
 
-const QMap<QString, std::function<bool(QString, QVariantMap&)>>  FlashcardUtility::dictionary = {
+const QMultiMap<QString, std::function<bool(QString, QVariantMap&)>>  FlashcardUtility::dictionary = {
     {"Q::", mapQ},
     {"DQ::", mapDQ},
     {"DA::", mapDA},
@@ -56,26 +56,35 @@ const QMap<QString, std::function<bool(QString, QVariantMap&)>>  FlashcardUtilit
 
 bool FlashcardUtility::addElementToAnswers(const QString uAnswer) {
 
-    QStringList list = uAnswer.split(",,,");
+    QStringList list = GeneralTaskUtility::splitAtFirstTwoCommas(uAnswer);
 
     QString cAnswer;
 
     QStringList unorderedAnswers;
     QStringList orderedAnswers;
 
-    static QRegularExpression trimEachregex = QRegularExpression("^\\s+|\\s+$");
 
     if (list.size() == 1) {
-        unorderedAnswers = list[0].split(",,").replaceInStrings(trimEachregex, "");
-        orderedAnswers = {};
+        unorderedAnswers = GeneralTaskUtility::splitAtComma(list[0]);
 
-        cAnswer = unorderedAnswers.join("; ");
+        for (auto& answer : unorderedAnswers) {
+            answer = GeneralTaskUtility::removeBackslashBeforeBackslash(GeneralTaskUtility::removeBackslashBeforeComma(answer.trimmed()));
+        }
+
+        cAnswer = unorderedAnswers.join(", ");
     }
     else if (list.size() == 2) {
-        unorderedAnswers = list[0].split(",,").replaceInStrings(trimEachregex, "");
-        orderedAnswers = list[1].split(",,").replaceInStrings(trimEachregex, "");
+        unorderedAnswers = GeneralTaskUtility::splitAtComma(list[0]);
+        for (auto& answer : unorderedAnswers) {
+            answer = GeneralTaskUtility::removeBackslashBeforeBackslash(GeneralTaskUtility::removeBackslashBeforeComma(answer.trimmed()));
+        }
 
-        cAnswer = unorderedAnswers.join("; ") + '\n' + orderedAnswers.join("; ");
+        orderedAnswers = GeneralTaskUtility::splitAtComma(list[1]);
+        for (auto& answer : orderedAnswers) {
+            answer = GeneralTaskUtility::removeBackslashBeforeBackslash(GeneralTaskUtility::removeBackslashBeforeComma(answer.trimmed()));
+        }
+
+        cAnswer = unorderedAnswers.join(", ") + '\n' + orderedAnswers.join(", ");
     }
     else return false;
 
@@ -90,7 +99,6 @@ QString FlashcardUtility::getcAnswerFromuAnswer(QString uAnswer) {
 }
 
 void FlashcardUtility::generateFlashcard(QQmlComponent* flashcardComponent, QQuickItem* scene, QVariantMap &map) {
-
 
     QObject* sceneObj = flashcardComponent->create();
     QQuickItem* flashcard = qobject_cast<QQuickItem*>(sceneObj);

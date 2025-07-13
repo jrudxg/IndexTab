@@ -6,6 +6,7 @@
 #include "projectreader.h"
 #include "scenedatamodel.h"
 #include "flashcardUtility.h"
+#include "tablemodel.h"
 
 int main(int argc, char *argv[])
 {
@@ -16,11 +17,11 @@ int main(int argc, char *argv[])
     qmlRegisterType<FileModel>("file.model", 1, 0, "FileModel");
     qmlRegisterType<FileManager>("file.manager", 1, 0, "FileManager");
 
-    FlashcardUtility* flashcardUtility = new FlashcardUtility();
-    qmlRegisterSingletonInstance<FlashcardUtility>("utility.flashcard", 1, 0, "FlashcardUtil", flashcardUtility);
+    qmlRegisterType<TableModel>("table.model", 1, 0, "TaskTableModel");
 
-    SceneDataModel* dataModel = new SceneDataModel(engine);
-    qmlRegisterSingletonInstance<SceneDataModel>("sceneData.model", 1, 0, "SceneDataModel", dataModel);
+    qmlRegisterSingletonInstance<FlashcardUtility>("utility.flashcard", 1, 0, "FlashcardUtil", new FlashcardUtility());
+
+    qmlRegisterSingletonInstance<SceneDataModel>("sceneData.model", 1, 0, "SceneDataModel", new SceneDataModel(engine));
 
 
 

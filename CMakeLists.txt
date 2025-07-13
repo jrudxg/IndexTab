@@ -1,69 +1,75 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.20)
+
+set(QT_QML_GENERATE_QMLLS_INI ON)
 
 project(IndexTab VERSION 0.1 LANGUAGES CXX)
-
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-set(CMAKE_AUTORCC on)
 
 find_package(Qt6 REQUIRED COMPONENTS Quick)
 
-qt_standard_project_setup(REQUIRES 6.5)
+qt_standard_project_setup(REQUIRES 6.9.1)
 
-qt_add_executable(appIndexTab
+set(CMAKE_AUTORCC ON)
+
+
+
+qt_add_executable(IndexTab
     main.cpp
 )
 
 set_source_files_properties(LastProjectModel.qml
-    PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
+    PROPERTIES QT_QML_SINGLETON_TYPE TRUE
+)
 
-
-qt_add_qml_module(appIndexTab
+qt_add_qml_module(IndexTab
     URI IndexTab
     VERSION 1.0
     QML_FILES
-        RESOURCES resource.qrc
         Main.qml
-	QML_FILES FileFolder.qml
-	QML_FILES Menubar.qml
-	QML_FILES HomeScreen.qml
-	QML_FILES OpenFileDialog.qml
-	QML_FILES CreateFileDialog.qml
-	QML_FILES HomeToolbar.qml
-	QML_FILES ToolbarLinks.qml
-	QML_FILES ProjectButtons.qml
-	QML_FILES ClickableTextImage.qml
-	QML_FILES LastProjectModel.qml
-	SOURCES filemanager.h filemanager.cpp
-	SOURCES filemodel.h filemodel.cpp
-	SOURCES flashcardUtility.h flashcardUtility.cpp
-	SOURCES projectreader.h projectreader.cpp
-	SOURCES scenedatamodel.h scenedatamodel.cpp
-	QML_FILES Flashcard.qml
-	QML_FILES Scene.qml
-	QML_FILES SceneLink.qml
-	SOURCES scenelinkutility.h scenelinkutility.cpp
-	SOURCES generaltaskutility.h generaltaskutility.cpp
-	QML_FILES Table.qml
+	FileFolder.qml
+	Menubar.qml
+	HomeScreen.qml
+	OpenFileDialog.qml
+	CreateFileDialog.qml
+	HomeToolbar.qml
+	ToolbarLinks.qml
+	ProjectButtons.qml
+	ClickableTextImage.qml
+	LastProjectModel.qml
+	Flashcard.qml
+	Scene.qml
+	SceneLink.qml
+	Table.qml
+
+    SOURCES
+    SOURCES filemanager.h filemanager.cpp
+    SOURCES filemodel.h filemodel.cpp
+    SOURCES flashcardUtility.h flashcardUtility.cpp
+    SOURCES projectreader.h projectreader.cpp
+    SOURCES scenedatamodel.h scenedatamodel.cpp
+    SOURCES scenelinkutility.h scenelinkutility.cpp
+    SOURCES generaltaskutility.h generaltaskutility.cpp
+    SOURCES tablemodel.h tablemodel.cpp
+    SOURCES tableutility.h tableutility.cpp
+
+
+
+    RESOURCES
+        resource.qrc
 )
 
-# Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
-# If you are developing for iOS or macOS you should consider setting an
-# explicit, fixed bundle identifier manually though.
-set_target_properties(appIndexTab PROPERTIES
-#    MACOSX_BUNDLE_GUI_IDENTIFIER com.example.appIndexTab
+set_target_properties(IndexTab PROPERTIES
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
 )
 
-target_link_libraries(appIndexTab
-    PRIVATE Qt6::Quick
-)
+target_link_libraries(IndexTab PRIVATE Qt6::Quick)
 
 include(GNUInstallDirs)
-install(TARGETS appIndexTab
+install(TARGETS IndexTab
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}

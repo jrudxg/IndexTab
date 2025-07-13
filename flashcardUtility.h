@@ -38,7 +38,7 @@ public:
 
     static void generateFlashcard(QQmlComponent* flashcardComponent, QQuickItem* scene, QVariantMap &map);
 
-    static const QMap<QString, std::function<bool(QString, QVariantMap&)>> dictionary;
+    static const QMultiMap<QString, std::function<bool(QString, QVariantMap&)>> dictionary;
 
     static const QVector<QString> getRequiredValuesNeeded() { return {"Q::","A::","P::"}; }
 

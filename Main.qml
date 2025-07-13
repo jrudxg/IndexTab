@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import sceneData.model
+
 Window {
     width: 3840
     height: 2160
@@ -14,14 +15,16 @@ Window {
 
         x: 0
         y: 0
-        width:  200
+        width: 200
         height: parent.height
 
         onHomeButtonClicked: pageLoader.source = "HomeScreen.qml"
 
         function loadEditScreenWhenFileExists() {
-            if (LastProjectModel.lastEditedProjectsSource === "") pageLoader.sourceComponent = noFileEditScreen
-            else pageLoader.sourceComponent = editScreen
+            if (LastProjectModel.lastEditedProjectsSource === "")
+                pageLoader.sourceComponent = noFileEditScreen
+            else
+                pageLoader.sourceComponent = editScreen
         }
 
         Connections {
@@ -34,23 +37,19 @@ Window {
             }
         }
 
-
         onEditButtonClicked: pageLoader.sourceComponent = editScreen
 
         onPlayButtonClicked: pageLoader.sourceComponent = playScreen
         onSettingsButtonClicked: pageLoader.sourceComponent = settingsScreen
-
     }
-
 
     Loader {
         id: pageLoader
         anchors.left: menuBar.right
         width: parent.width - menuBar.width
         height: parent.height
-        ///source: "HomeScreen.qml"
-        sourceComponent: settingsScreen
-    } 
+        source: "HomeScreen.qml"
+    }
 
     Component {
         id: noFileEditScreen
@@ -76,13 +75,12 @@ Window {
 
             color: "white"
 
-
             TextEdit {
                 id: textEdit
                 text: LastProjectModel.getText()
 
                 Connections {
-                    target:  LastProjectModel
+                    target: LastProjectModel
 
                     function onFileOpened() {
                         text = LastProjectModel.getText()
@@ -105,16 +103,16 @@ Window {
                 anchors {
                     right: parent.right
                     rightMargin: 5
-                    top:  parent.top
+                    top: parent.top
                 }
 
-                text:  LastProjectModel.lastEditedProjectsSource
+                text: LastProjectModel.lastEditedProjectsSource
                 font.pointSize: 11
                 color: Qt.lightGray
             }
 
             Shortcut {
-                sequence:  "Ctrl+S"
+                sequence: "Ctrl+S"
                 onActivated: LastProjectModel.saveText(textEdit.text)
             }
 
@@ -129,7 +127,7 @@ Window {
 
                 anchors {
                     right: parent.right
-                    bottom:  parent.bottom
+                    bottom: parent.bottom
                     rightMargin: 5
                     bottomMargin: 5
                 }
@@ -141,8 +139,8 @@ Window {
         id: playScreen
         Loader {
             data: SceneDataModel.currentScene
+            onLoaded: console.log(SceneDataModel.lastEditedProjectsSource)
         }
-
     }
 
     Component {
@@ -150,11 +148,10 @@ Window {
         Rectangle {
             color: Qt.lighter("lightgray", 1.1)
             anchors.fill: parent
-            Table{
+            Table {
                 id: table
                 anchors.centerIn: parent
             }
         }
-
     }
 }

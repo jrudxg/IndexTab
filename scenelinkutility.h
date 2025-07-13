@@ -18,7 +18,7 @@ public:
 
     static void generateSceneLink(QQmlComponent* sceneLinkComponent, QQuickItem* scene, QVariantMap &map);
 
-    static const QMap<QString, std::function<bool(QString, QVariantMap&)>> dictionary;
+    static const QMultiMap<QString, std::function<bool(QString, QVariantMap&)>> dictionary;
 
     static const QVector<QString> getRequiredValuesNeeded() { return {"N::","P::"}; }
 private:

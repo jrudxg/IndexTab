@@ -32,7 +32,7 @@ const std::function<bool(QString, QVariantMap&)> SceneLinkUtility::mapS = [](QSt
     return false;
 };
 
-const QMap<QString, std::function<bool(QString, QVariantMap&)>>  SceneLinkUtility::dictionary = {
+const QMultiMap<QString, std::function<bool(QString, QVariantMap&)>>  SceneLinkUtility::dictionary = {
     {"N::", mapN},
     {"P::", mapP},
     {"S::", mapS}
