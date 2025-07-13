@@ -6,10 +6,6 @@ Item {
     property string header: ""
     property TaskTableModel model
 
-    Component.onCompleted: {
-        console.log(model)
-    }
-
     id: root
 
     width: 600 * scale

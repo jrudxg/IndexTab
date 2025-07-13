@@ -102,7 +102,6 @@ void FlashcardUtility::generateFlashcard(QQmlComponent* flashcardComponent, QQui
 
     QObject* sceneObj = flashcardComponent->create();
     QQuickItem* flashcard = qobject_cast<QQuickItem*>(sceneObj);
-
     flashcard->setParentItem(scene);
 
 

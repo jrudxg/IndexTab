@@ -2,7 +2,6 @@ pragma Singleton
 
 import QtCore
 import  QtQuick
-import QtQuick.Controls
 import Qt.labs.platform as Platform
 import QtQuick.Dialogs
 

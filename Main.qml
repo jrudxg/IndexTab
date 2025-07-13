@@ -139,7 +139,6 @@ Window {
         id: playScreen
         Loader {
             data: SceneDataModel.currentScene
-            onLoaded: console.log(SceneDataModel.lastEditedProjectsSource)
         }
     }
 

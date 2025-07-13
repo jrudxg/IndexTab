@@ -1,7 +1,5 @@
 import QtQuick
 import QtQuick.Dialogs
-import QtQuick.Controls
-import Qt.labs.folderlistmodel
 
 Item {
 

@@ -21,7 +21,7 @@ GeneralTaskUtility::taskTypes getTaskTypeOfString(const QString &line) {
 
 // make sure that there are 3 colons at the end of the string
 void ProjectReader::setNewSceneNameFromLine(QString line) {
-    currentSceneName = GeneralTaskUtility::removeTrippleColumns(line.mid(3).trimmed());
+    currentSceneName = GeneralTaskUtility::removeTrippleColumns(line.trimmed());
 }
 
 
@@ -77,7 +77,6 @@ QString generateObject(GeneralTaskUtility::taskTypes type, QString currentSceneN
     }
 
     if (requiredValuesNeeded.size() == 0) {
-        qInfo() << type;
         SceneDataModel::getInstance()->addElement(currentSceneName, type, map);
     }
     return dictionary.size() == 0 ? "" : line;

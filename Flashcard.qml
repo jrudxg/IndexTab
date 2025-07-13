@@ -10,10 +10,6 @@ Rectangle {
     property string questionDescription: ""
     property string answerDescription: ""
 
-    Component.onCompleted: {
-        console.log("Hello")
-    }
-
     // approximately 14:9
     width: 400
     height: 257

@@ -14,7 +14,6 @@ SceneDataModel::SceneDataModel(QQmlApplicationEngine &engine, QObject *parent)
 
 
 void SceneDataModel::addElement(QString sceneName, GeneralTaskUtility::taskTypes type, QVariantMap &map) {
-
     bool nameAlreadyExists = false;
     QQuickItem* neededScene;
     for (auto& scene : m_data) {
@@ -38,7 +37,9 @@ void SceneDataModel::addElement(QString sceneName, GeneralTaskUtility::taskTypes
         QObject* sceneObj = m_sceneComponent->create();
         QQuickItem* scene = qobject_cast<QQuickItem*>(sceneObj);
         m_data.push_back({sceneName, scene});
-        if (sceneName == "SCENE1") setCurrentScenePerName(sceneName);
+        if (sceneName == "MAIN") {
+            setCurrentScenePerName(sceneName);
+        }
         neededScene = scene;
     }
     if (const auto& component = taskComponents.find(type); component != taskComponents.end()) {
@@ -49,7 +50,7 @@ void SceneDataModel::addElement(QString sceneName, GeneralTaskUtility::taskTypes
 
 const QMap<GeneralTaskUtility::taskTypes, std::function<void(QQmlComponent* component, QQuickItem* scene, QVariantMap &map)>> SceneDataModel::generateTaskDictionary = {
 
-{GeneralTaskUtility::taskTypes::Flashcard, FlashcardUtility::generateFlashcard},
+    {GeneralTaskUtility::taskTypes::Flashcard, FlashcardUtility::generateFlashcard},
     {GeneralTaskUtility::taskTypes::Link, SceneLinkUtility::generateSceneLink},
     {GeneralTaskUtility::taskTypes::Table, TableUtility::generateTable},
 

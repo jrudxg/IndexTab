@@ -84,8 +84,6 @@ const QString GeneralTaskUtility::removeComment(const QString &line) {
 }
 
 const QString GeneralTaskUtility::removeTrippleColumns(const QString &line) {
-    for (int i = 0; i < line.size() - 3; ++i) {
-        if (line[i] == ':' && line[i+1] == ':' && line[i+2] == ':') return line.left(i);
-    }
-    return line;
+    QString string = line;
+    return string.remove(":::");
 }
