@@ -60,7 +60,7 @@ qt_add_qml_module(IndexTab
 	QML_FILES TaskText.qml
 	QML_FILES
 )
-
+[[
 set_target_properties(IndexTab PROPERTIES
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
@@ -69,7 +69,7 @@ set_target_properties(IndexTab PROPERTIES
 )
 
 target_include_directories(IndexTab PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/quickjs)
-target_link_libraries(IndexTab PRIVATE Qt6::Quick Qt6::WebEngineQuick Qt6::WebEngineCore ${CMAKE_CURRENT_SOURCE_DIR}/quickjs/build/Debug/quickjs.lib)
+target_link_libraries(IndexTab PRIVATE Qt6::Quick Qt6::WebEngineQuick Qt6::WebEngineCore quickjs)
 
 include(GNUInstallDirs)
 install(TARGETS IndexTab
