@@ -1,0 +1,10 @@
+^C:\PROGRAMMIERUNG\QMLPROJECT\INDEXTAB\QUICKJS\BUILD\CMAKEFILES\7E5B167CB974917630BAED6901A94BD7\GENERATE.STAMP.RULE
+setlocal
+C:\mingw64\bin\cmake.exe -SC:/Programmierung/QMLProject/IndexTab/quickjs -BC:/Programmierung/QMLProject/IndexTab/quickjs/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Programmierung/QMLProject/IndexTab/quickjs/build/quickjs.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

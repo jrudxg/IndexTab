@@ -1,16 +1,25 @@
+#include <QTimer>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+
+#include <QtWebEngineQuick/qtwebenginequickglobal.h>
+#include <QQuickWebEngineProfile>
 
 #include "fileModel.h"
 #include "filemanager.h"
 #include "projectreader.h"
 #include "scenedatamodel.h"
-#include "flashcardUtility.h"
 #include "tablemodel.h"
 
 int main(int argc, char *argv[])
 {
+    QCoreApplication::setOrganizationName("MyCompany");
+    QCoreApplication::setOrganizationDomain("https://github.com/AndiFriend/IndexTab");
+    QCoreApplication::setApplicationName("IndexTab");
+
+    QtWebEngineQuick::initialize();
     QGuiApplication app(argc, argv);
+
     QQmlApplicationEngine engine;
 
 
@@ -19,16 +28,7 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<TableModel>("table.model", 1, 0, "TaskTableModel");
 
-    qmlRegisterSingletonInstance<FlashcardUtility>("utility.flashcard", 1, 0, "FlashcardUtil", new FlashcardUtility());
-
     qmlRegisterSingletonInstance<SceneDataModel>("sceneData.model", 1, 0, "SceneDataModel", new SceneDataModel(engine));
-
-
-
-
-    QCoreApplication::setOrganizationDomain("MyCompany");
-    QCoreApplication::setOrganizationDomain("https://github.com/AndiFriend/IndexTab");
-    QCoreApplication::setApplicationName("IndexTab");
 
 
 
@@ -37,11 +37,25 @@ int main(int argc, char *argv[])
         &QQmlApplicationEngine::objectCreationFailed,
         &app,
         []() { QCoreApplication::exit(-1); },
-        Qt::QueuedConnection);
-    engine.load(QUrl(QStringLiteral("IndexTab/Main.qml")));
+        Qt::QueuedConnection
+    );
+
+    QString projectPath = "C:/Users/afreu/Documents/Projects/B";
+    QString imagePath = projectPath + "/images";
+
 
     ProjectReader reader;
-    reader.readFile("file:///C:/Users/afreu/Documents/Projects/B.txt");
+    reader.readDir("C:/Users/afreu/Documents/Projects/B");
+
+    QQuickWebEngineProfile* profile = QQuickWebEngineProfile::defaultProfile();
+
+    QObject::connect(&app, &QCoreApplication::aboutToQuit, []() {
+        QTimer::singleShot(0, []() {
+            delete QQuickWebEngineProfile::defaultProfile();
+        });
+    });
+
+    engine.load(QUrl(QStringLiteral("IndexTab/Main.qml")));
 
     return app.exec();
 }

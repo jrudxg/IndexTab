@@ -52,10 +52,11 @@ bool FileModel::removeFile(QString path) {
 
 QString FileModel::getTextFromModelEntry(QString fileSource) const {
 
-    fileSource.remove("file:///");
+    // chops of MAIN.txt
+    const QString project = fileSource.remove("file:///").chopped(9);
     for (auto &data : std::as_const(m_data)) {
 
-        if (fileSource == data.second) {
+        if (project == data.second) {
 
             QFile file(fileSource);
             if (!file.open(QFile::ReadOnly | QFile::Truncate)) return QString();
@@ -69,10 +70,11 @@ QString FileModel::getTextFromModelEntry(QString fileSource) const {
 }
 bool FileModel::saveTextToModelEntry(const QString &text, QString fileSource) const {
 
-    fileSource.remove("file:///");
+    // chops of MAIN.txt
+    const QString project = fileSource.remove("file:///").chopped(9);
     for (auto &data : std::as_const(m_data)) {
 
-        if (fileSource == data.second) {
+        if (project == data.second) {
 
             QFile file(fileSource);
             if (!file.open(QFile::WriteOnly | QFile::Truncate)) return false;

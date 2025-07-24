@@ -3,6 +3,7 @@ import sceneData.model
 
 Rectangle {
     property string sceneLink
+    id: root
 
     width: 140
     height: 90
@@ -22,6 +23,14 @@ Rectangle {
 
     MouseArea {
         anchors.fill: parent
-        onClicked: SceneDataModel.setCurrentScenePerName(sceneLink)
+        drag.target: root
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.RightButton
+        onClicked: {
+            SceneDataModel.setCurrentScenePerName(sceneLink)
+        }
     }
 }

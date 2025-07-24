@@ -2,6 +2,13 @@
 #define PROJECTREADER_H
 
 #include <QObject>
+#include <QDir>
+#include <generaltaskutility.h>
+
+extern "C" {
+#include "quickjs.h"
+}
+
 
 class ProjectReader : public QObject
 {
@@ -11,12 +18,27 @@ public:
     explicit ProjectReader(QObject *parent = nullptr)
     : QObject{parent} {}
 
-    void readFile(QString source);
+    void readDir(QString path);
 private:
 
+    QString generateObject(GeneralTaskUtility::taskTypes type, QString currentSceneName, QTextStream &in);
+
+    QString generateHTMLFromMarkdown(QString markdown);
+
+    QString insertHTMLinHTMLTemplate(QString textToInsert);
+
+    QString HTMLTemplateText = "";
+
+    QString imagePath{};
+
     QString currentSceneName;
+    QDir* currentDir;
+
     void setNewSceneNameFromLine(QString line);
-    static const QRegularExpression removeTrippleColumns;
+
+    JSRuntime* rt = nullptr;
+    JSContext* ctx = nullptr;
 };
 
 #endif // PROJECTREADER_H
+

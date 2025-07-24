@@ -2,6 +2,7 @@
 #include "flashcardUtility.h"
 #include "scenelinkutility.h"
 #include "tableutility.h"
+#include "textutility.h"
 
 SceneDataModel* SceneDataModel::instance = nullptr;
 
@@ -16,8 +17,10 @@ SceneDataModel::SceneDataModel(QQmlApplicationEngine &engine, QObject *parent)
 void SceneDataModel::addElement(QString sceneName, GeneralTaskUtility::taskTypes type, QVariantMap &map) {
     bool nameAlreadyExists = false;
     QQuickItem* neededScene;
+
+    QString adjustedSceneName = sceneName.trimmed().toLower();
     for (auto& scene : m_data) {
-        if (sceneName == scene.first) {
+        if (adjustedSceneName == scene.first) {
             neededScene = scene.second;
             nameAlreadyExists = true;
             break;
@@ -26,19 +29,22 @@ void SceneDataModel::addElement(QString sceneName, GeneralTaskUtility::taskTypes
 
 
     if (m_sceneComponent == nullptr) {
-        m_sceneComponent = new QQmlComponent(qobject_cast<QQmlEngine*>(m_engine), QUrl("IndexTab/Scene.qml"));
-        taskComponents[GeneralTaskUtility::taskTypes::Flashcard] = new QQmlComponent(qobject_cast<QQmlEngine*>(m_engine), QUrl("IndexTab/Flashcard.qml"));
-        taskComponents[GeneralTaskUtility::taskTypes::Link] = new QQmlComponent(qobject_cast<QQmlEngine*>(m_engine), QUrl("IndexTab/SceneLink.qml"));
-        taskComponents[GeneralTaskUtility::taskTypes::Table] = new QQmlComponent(qobject_cast<QQmlEngine*>(m_engine), QUrl("IndexTab/Table.qml"));
+        QQmlEngine* qmlEngine = qobject_cast<QQmlEngine*>(m_engine);
+
+        m_sceneComponent = new QQmlComponent(qmlEngine, QUrl("IndexTab/Scene.qml"));
+        taskComponents[GeneralTaskUtility::taskTypes::Flashcard] = new QQmlComponent(qmlEngine, QUrl("IndexTab/TaskFlashcard.qml"));
+        taskComponents[GeneralTaskUtility::taskTypes::Link] = new QQmlComponent(qmlEngine, QUrl("IndexTab/TaskSceneLink.qml"));
+        taskComponents[GeneralTaskUtility::taskTypes::Table] = new QQmlComponent(qmlEngine, QUrl("IndexTab/TaskTable.qml"));
+        taskComponents[GeneralTaskUtility::taskTypes::Text] = new QQmlComponent(qmlEngine, QUrl("IndexTab/TaskText.qml"));
     }
 
 
     if (!nameAlreadyExists) {
         QObject* sceneObj = m_sceneComponent->create();
         QQuickItem* scene = qobject_cast<QQuickItem*>(sceneObj);
-        m_data.push_back({sceneName, scene});
-        if (sceneName == "MAIN") {
-            setCurrentScenePerName(sceneName);
+        m_data.push_back({adjustedSceneName, scene});
+        if (adjustedSceneName == "main") {
+            setCurrentScenePerName(adjustedSceneName);
         }
         neededScene = scene;
     }
@@ -53,6 +59,7 @@ const QMap<GeneralTaskUtility::taskTypes, std::function<void(QQmlComponent* comp
     {GeneralTaskUtility::taskTypes::Flashcard, FlashcardUtility::generateFlashcard},
     {GeneralTaskUtility::taskTypes::Link, SceneLinkUtility::generateSceneLink},
     {GeneralTaskUtility::taskTypes::Table, TableUtility::generateTable},
+    {GeneralTaskUtility::taskTypes::Text, TextUtility::generateText},
 
 
     // exists so that the map can still be used with meta types and you don't have to check if the type is out of bounds
@@ -63,7 +70,8 @@ const QMap<GeneralTaskUtility::taskTypes, std::function<void(QQmlComponent* comp
 const QMap<QString, GeneralTaskUtility::taskTypes> SceneDataModel::taskTypeDictionary = {
     {"FLC", GeneralTaskUtility::taskTypes::Flashcard},
     {"TAB", GeneralTaskUtility::taskTypes::Table},
-    {"LNK", GeneralTaskUtility::taskTypes::Link}
+    {"LNK", GeneralTaskUtility::taskTypes::Link},
+    {"TXT", GeneralTaskUtility::taskTypes::Text}
 };
 
 QString SceneDataModel::currentSceneName()
@@ -80,11 +88,11 @@ SceneDataModel* SceneDataModel::getInstance() {
 }
 
 bool SceneDataModel::setCurrentScenePerName(QString newSceneName) {
-    QString trimmedSceneName = newSceneName.trimmed();
-    if (const auto& it = std::find_if(m_data.begin(), m_data.end(), [&](const auto& scene){return scene.first == trimmedSceneName;}); it != m_data.end()) {
+    QString adjustedSceneName = newSceneName.trimmed().toLower();
+    if (const auto& it = std::find_if(m_data.begin(), m_data.end(), [&](const auto& scene){return scene.first == adjustedSceneName;}); it != m_data.end()) {
         m_currentScene = it->second;
         emit currentSceneChanged();
-        setCurrentSceneName(trimmedSceneName);
+        setCurrentSceneName(adjustedSceneName);
         return true;
     }
     return false;

@@ -36,7 +36,7 @@ Item {
     }
 
     function openFile(path) {
-        settings.sourceOfLastEditedProject = path
+        settings.sourceOfLastEditedProject = path + '/' + "MAIN.txt"
         fileOpened()
     }
 
@@ -51,7 +51,7 @@ Item {
 
     FolderDialog {
         id: folderDialog
-        title: qsTr("Choose folderpath to create folder")
+        title: qsTr("Choose folderpath to create project folder")
         currentFolder: Platform.StandardPaths.writableLocation(Platform.StandardPaths.DocumentsLocation)
         onAccepted: {
             settings.projectsLocation = "file:///" + fileManager.createFolder(selectedFolder, "Projects")

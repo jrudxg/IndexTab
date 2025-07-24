@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import sceneData.model
+import QtWebEngine
 
 Window {
     width: 3840
@@ -66,38 +67,63 @@ Window {
         }
     }
 
+
+
     Component {
         id: editScreen
 
         Rectangle {
 
             anchors.fill: parent
+             color: "white"
 
-            color: "white"
 
-            TextEdit {
-                id: textEdit
-                text: LastProjectModel.getText()
+            Flickable {
+                 id: flick
 
-                Connections {
-                    target: LastProjectModel
+                 width: parent.width; height: parent.height;
+                 contentWidth: textEdit.contentWidth
+                 contentHeight: textEdit.contentHeight
+                 clip: true
 
-                    function onFileOpened() {
-                        text = LastProjectModel.getText()
-                    }
+                 function ensureVisible(r)
+                 {
+                     if (contentX >= r.x)
+                         contentX = r.x;
+                     else if (contentX+width <= r.x+r.width)
+                         contentX = r.x+r.width-width;
+                     if (contentY >= r.y)
+                         contentY = r.y;
+                     else if (contentY+height <= r.y+r.height)
+                         contentY = r.y+r.height-height;
+                 }
 
-                    function onFileCreated() {
-                        text = LastProjectModel.getText()
-                    }
-                }
+                 TextEdit {
+                     id: textEdit
+                     text: LastProjectModel.getText()
 
-                anchors {
-                    fill: parent
-                    margins: 20
-                }
+                     focus: true
+                     wrapMode: Text.Wrap
+                     onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
 
-                font.pointSize: 25
-            }
+                     Connections {
+                         target: LastProjectModel
+
+                         function onFileOpened() {
+                             text = LastProjectModel.getText()
+                         }
+
+                         function onFileCreated() {
+                             text = LastProjectModel.getText()
+                         }
+                     }
+
+                     width: flick.width
+
+                     font.pointSize: 25
+                 }
+
+             }
 
             Text {
                 anchors {
@@ -113,7 +139,9 @@ Window {
 
             Shortcut {
                 sequence: "Ctrl+S"
-                onActivated: LastProjectModel.saveText(textEdit.text)
+                onActivated: {
+                    LastProjectModel.saveText(textEdit.text)
+                }
             }
 
             Button {
@@ -147,10 +175,7 @@ Window {
         Rectangle {
             color: Qt.lighter("lightgray", 1.1)
             anchors.fill: parent
-            Table {
-                id: table
-                anchors.centerIn: parent
-            }
+
         }
     }
 }

@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QRegularExpression>
+#include <QFile>
 
 class GeneralTaskUtility : QObject
 {
@@ -28,6 +29,7 @@ public:
         Flashcard,
         Table,
         Link,
+        Text,
         size,
         unknown
     };

@@ -14,7 +14,7 @@ public:
 
     // returns the folder path from the folder created
     // if no folder is created, it returns an empty QString
-    Q_INVOKABLE QString createFolder(QString directory, QString fileName) const;
+    Q_INVOKABLE QString createFolder(QString directory, QString fileName, bool shouldCreateImageFolder = false) const;
     // returns the file path from the file created
     // if no file is created, it returns an empty QString
     Q_INVOKABLE QString createFile(QString directory, QString fileName) const;

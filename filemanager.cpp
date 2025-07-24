@@ -3,12 +3,17 @@
 FileManager* FileManager::fileManager_Singelton = 0;
 
 
-QString FileManager::createFolder(QString directory, QString folderName) const {
+QString FileManager::createFolder(QString directory, QString folderName, bool shouldCreateImageFolder) const {
     QDir dir(directory.remove("file:///"));
 
     if (dir.exists(folderName)) return QString();
 
     if(!dir.mkdir(folderName)) return QString();
+
+    if (shouldCreateImageFolder) {
+         QDir project{dir.absoluteFilePath(folderName)};
+        if(!project.mkdir("images")) return QString();
+    }
 
     return dir.absoluteFilePath(folderName);
 }
@@ -21,11 +26,11 @@ QString FileManager::createFile(QString directory, QString fileName) const {
 
     if (dir.exists(fileName)) return QString();
 
-    QFile file(directory + "/" + fileName);
+    QFile file(directory + '/' + fileName);
     file.open(QIODevice::WriteOnly);
     file.close();
 
-    return dir.path() + "/" + fileName;
+    return dir.path() + '/' + fileName;
 }
 
 bool FileManager::deleteFile(QString directory) const {

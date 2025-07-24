@@ -3,11 +3,8 @@
 #include <QRegularExpression>
 #include <QQmlProperty>
 
-FlashcardUtility* FlashcardUtility::instance = nullptr;
-
 const std::function<bool(QString, QVariantMap&)> FlashcardUtility::mapA = [](QString line, QVariantMap &map) {
-    if (!FlashcardUtility::getInstance()->addElementToAnswers(line.mid(3))) return false;
-    map["answers"] = line.mid(3);
+    map["answers"] = getcAnswerFromuAnswer(line.mid(3));
     return true;
 };
 
@@ -39,6 +36,10 @@ const std::function<bool(QString, QVariantMap&)> FlashcardUtility::mapS = [](QSt
         map["scale"] = QVariant(number[0]);
         return true;
     }
+    if (auto numbers = GeneralTaskUtility::getNumberValuesFromLine("S::", line, 2, QRegularExpression(";")); !numbers.isEmpty()) {
+        map["size"] = QVariantList(numbers.begin(), numbers.end());
+        return true;
+    }
     return false;
 };
 
@@ -54,7 +55,7 @@ const QMultiMap<QString, std::function<bool(QString, QVariantMap&)>>  FlashcardU
     {"A::", mapA}
 };
 
-bool FlashcardUtility::addElementToAnswers(const QString uAnswer) {
+const QString FlashcardUtility::getcAnswerFromuAnswer(const QString uAnswer) {
 
     QStringList list = GeneralTaskUtility::splitAtFirstTwoCommas(uAnswer);
 
@@ -86,16 +87,7 @@ bool FlashcardUtility::addElementToAnswers(const QString uAnswer) {
 
         cAnswer = unorderedAnswers.join(", ") + '\n' + orderedAnswers.join(", ");
     }
-    else return false;
-
-
-    answers.insert(uAnswer, {cAnswer, {unorderedAnswers, orderedAnswers}});
-    return true;
-}
-
-QString FlashcardUtility::getcAnswerFromuAnswer(QString uAnswer) {
-    if (!answers.contains(uAnswer)) return "Error";
-    return answers[uAnswer].first;
+    return cAnswer;
 }
 
 void FlashcardUtility::generateFlashcard(QQmlComponent* flashcardComponent, QQuickItem* scene, QVariantMap &map) {
@@ -104,18 +96,24 @@ void FlashcardUtility::generateFlashcard(QQmlComponent* flashcardComponent, QQui
     QQuickItem* flashcard = qobject_cast<QQuickItem*>(sceneObj);
     flashcard->setParentItem(scene);
 
-
     QQmlProperty(flashcard, "x").write(map["position"].toList()[0]);
     QQmlProperty(flashcard, "y").write(map["position"].toList()[1]);
     QQmlProperty(flashcard, "question").write(map["question"]);
     QQmlProperty(flashcard, "answer").write(map["answers"]);
 
-    QVariant qD = map["descriptionQuestion"];
-    if (qD != QVariant()) QQmlProperty(flashcard, "questionDescription").write(qD);
+    QVariant dQ = map["descriptionQuestion"];
+    if (dQ != QVariant()) QQmlProperty(flashcard, "questionDescription").write(dQ);
 
-    QVariant aD = map["descriptionAnswer"];
-    if (aD != QVariant()) QQmlProperty(flashcard, "answerDescription").write(aD);
+    QVariant dA = map["descriptionAnswer"];
+    if (dA != QVariant()) QQmlProperty(flashcard, "answerDescription").write(dA);
 
-    QVariant s = map["scale"];
-    if (s != QVariant()) QQmlProperty(flashcard, "scale").write(s);
+    QVariant scale = map["scale"];
+    if (scale != QVariant()) QQmlProperty(flashcard, "scale").write(scale);
+    else {
+        QVariantList size = qvariant_cast<QVariantList>(map["size"]);
+        if (size != QVariantList()) {
+            QQmlProperty(flashcard, "width").write(size[0]);
+            QQmlProperty(flashcard, "height").write(size[1]);
+        }
+    }
 }

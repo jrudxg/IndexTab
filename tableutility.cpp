@@ -12,12 +12,17 @@ const std::function<bool(QString, QVariantMap&)> TableUtility::mapP = [](QString
 };
 
 const std::function<bool(QString, QVariantMap&)> TableUtility::mapS = [](QString line, QVariantMap &map) {
-    if (auto numbers = GeneralTaskUtility::getNumberValuesFromLine("S::", line, 1, QRegularExpression()); !numbers.isEmpty()) {
-        map["scale"] = QVariant(numbers[0]);
+    if (auto number = GeneralTaskUtility::getNumberValuesFromLine("S::", line, 1, QRegularExpression()); !number.isEmpty()) {
+        map["scale"] = QVariant(number[0]);
+        return true;
+    }
+    if (auto numbers = GeneralTaskUtility::getNumberValuesFromLine("S::", line, 2, QRegularExpression(";")); !numbers.isEmpty()) {
+        map["size"] = QVariantList(numbers.begin(), numbers.end());
         return true;
     }
     return false;
 };
+
 
 const std::function<bool(QString, QVariantMap&)> TableUtility::mapH = [](QString line, QVariantMap &map) {
     map["header"] = line.mid(3);
@@ -70,12 +75,19 @@ void TableUtility::generateTable(QQmlComponent* tableComponent, QQuickItem* scen
 
     QQmlProperty(table, "model").write(map["model"]);
 
-
-    QVariant s = map["scale"];
-    if (s != QVariant()) QQmlProperty(table, "scale").write(s);
-
     QVariant h = map["header"];
     if (h != QVariant()) QQmlProperty(table, "header").write(h);
+
+
+    QVariant scale = map["scale"];
+    if (scale != QVariant()) QQmlProperty(table, "scale").write(scale);
+    else {
+        QVariantList size = qvariant_cast<QVariantList>(map["size"]);
+        if (size != QVariantList()) {
+            QQmlProperty(table, "width").write(size[0]);
+            QQmlProperty(table, "height").write(size[1]);
+        }
+    }
 }
 
 
@@ -93,7 +105,6 @@ const int TableUtility::generateTableModel(QString line, QVariantMap &map) {
         size.rowCount = potentialSize[0].toInt(&Ok1);
         size.columnCount = potentialSize[1].toInt(&Ok2);
         if (Ok1 == false || Ok2 == false) {
-            qInfo() << Ok1 << Ok2;
             return 0;
         }
     }

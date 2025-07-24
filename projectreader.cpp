@@ -3,8 +3,50 @@
 #include "flashcardUtility.h"
 #include "scenelinkutility.h"
 #include "tableutility.h"
-#include <QFile>
+#include "textutility.h"
 #include <QMultiMap>
+#include <QJSEngine>
+#include <QJSValue>
+#include <QJSValueIterator>
+
+
+// generates with markdown-it and many plugins a html file
+// uses quickjs (https://github.com/quickjs-ng/quickjs)
+QString ProjectReader::generateHTMLFromMarkdown(QString markdown) {
+    JSValue global = JS_GetGlobalObject(ctx);
+    QString html = "";
+
+    markdown.replace("\\{", "\\\\{");
+    markdown.replace("\\}", "\\\\}");
+
+    JSValue object = JS_GetPropertyStr(ctx, global, "convertMarkdownToHTML");
+    JSValue func = JS_GetPropertyStr(ctx, object,  "convertMarkdownToHTML");
+
+    JSValue arg[1];
+    arg[0] = JS_NewString(ctx, markdown.toStdString().c_str());
+
+    JSValue result = JS_Call(ctx, func, object, 1, arg);
+
+    const char* cstr = JS_ToCString(ctx, result);
+
+    html = QString::fromUtf8(cstr);
+
+    JS_FreeCString(ctx, cstr);
+
+    JS_FreeValue(ctx, result);
+    JS_FreeValue(ctx, arg[0]);
+
+
+    JS_FreeValue(ctx, func);
+    JS_FreeValue(ctx, object);
+    JS_FreeValue(ctx, global);
+
+    return html;
+}
+
+QString ProjectReader::insertHTMLinHTMLTemplate(QString textToInsert) {
+    return HTMLTemplateText.replace("${result}", textToInsert);
+}
 
 GeneralTaskUtility::taskTypes getTaskTypeOfString(const QString &line) {
 
@@ -18,14 +60,13 @@ GeneralTaskUtility::taskTypes getTaskTypeOfString(const QString &line) {
 }
 
 
-
 // make sure that there are 3 colons at the end of the string
 void ProjectReader::setNewSceneNameFromLine(QString line) {
     currentSceneName = GeneralTaskUtility::removeTrippleColumns(line.trimmed());
 }
 
 
-QString generateObject(GeneralTaskUtility::taskTypes type, QString currentSceneName, QTextStream &in) {
+QString ProjectReader::generateObject(GeneralTaskUtility::taskTypes type, QString currentSceneName, QTextStream &in) {
 
     QVariantMap map{};
     QVector<QString> requiredValuesNeeded;
@@ -45,14 +86,40 @@ QString generateObject(GeneralTaskUtility::taskTypes type, QString currentSceneN
     if (type == GeneralTaskUtility::taskTypes::Table) {
         requiredValuesNeeded = TableUtility::getMinimumRequiredValuesNeeded();
         dictionary = TableUtility::dictionary;
-        if (in.atEnd()) return "";
 
         int rowCount = TableUtility::generateTableModel(in.readLine(), map );
         TableUtility::addRowsToValuesAndDictionary(&requiredValuesNeeded, &dictionary, rowCount);
     }
 
+    if (type == GeneralTaskUtility::taskTypes::Text) {
 
-    startOfLoop:
+        requiredValuesNeeded = TextUtility::getRequiredValuesNeeded();
+        dictionary = TextUtility::dictionary;
+
+        QString text{};
+
+        QStringList endingSequences = TextUtility::getEndingSequences();
+        QString line = in.readLine();
+
+
+        for (; !endingSequences.contains(line); line = in.readLine() ) {
+            if (in.atEnd()) return "";
+            text.append(line + '\n');
+        }
+
+        int textType = endingSequences.indexOf(line);
+        if (textType == -1) {
+            return "";
+        }
+        if (line == "/MD") {
+            QString textToBeInserted = generateHTMLFromMarkdown(text);
+            text = insertHTMLinHTMLTemplate(textToBeInserted);
+        }
+
+        TextUtility::setText(text, textType, imagePath, map);
+    }
+
+startOfLoop:
     if (in.atEnd()) dictionary = {};
     QString line = in.readLine();
 
@@ -64,8 +131,6 @@ QString generateObject(GeneralTaskUtility::taskTypes type, QString currentSceneN
     for (auto it = dictionary.begin(); it != dictionary.end(); ++it) {
         if (!line.startsWith(it.key())) continue;
         if (!dictionary.value(it.key())(line, map)) return "";
-
-
 
         for (int i = 0; i < requiredValuesNeeded.size(); ++i) {
             if (it.key() == requiredValuesNeeded[i]) requiredValuesNeeded.remove(i,1);
@@ -79,21 +144,53 @@ QString generateObject(GeneralTaskUtility::taskTypes type, QString currentSceneN
     if (requiredValuesNeeded.size() == 0) {
         SceneDataModel::getInstance()->addElement(currentSceneName, type, map);
     }
-    return dictionary.size() == 0 ? "" : line;
+    return line;
 }
 
 
-void ProjectReader::readFile(QString source) {
-    QFile file(source.remove("file:///"));
-    if (!file.open(QFile::ReadOnly)) return;
+void ProjectReader::readDir(QString path) {
+
+    imagePath = path + "/images/";
+
+    if (HTMLTemplateText == "") {
+        QFile file{":/HTMLTemplate.html"};
+        file.open(QFile::ReadOnly | QFile::Text);
+        HTMLTemplateText = file.readAll();
+        file.close();
+    }
+
+    rt = JS_NewRuntime();
+    ctx = JS_NewContext(rt);
+
+    QFile jsFile{":/markdownConverter.js"};
+    jsFile.open(QIODevice::ReadOnly | QIODevice::Text);
+    QByteArray byteArray = jsFile.readAll();
+    jsFile.close();
+
+    JSValue val = JS_Eval(ctx,
+                          byteArray.constData(),
+                          byteArray.size(),
+                          ":/bundle.js",
+                          JS_EVAL_TYPE_GLOBAL);
+
+    JS_FreeValue(ctx, val);
+
+    currentDir = new QDir(path);
+    QFile file = currentDir->filePath("MAIN.txt");
+
+    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+        return;
+    }
 
     GeneralTaskUtility::taskTypes type = GeneralTaskUtility::taskTypes::unknown;
 
     QTextStream in(&file);
-
+    QString lineNeededToBeReadInstead{};
     while (!in.atEnd()) {
-        QString line = in.readLine();
 
+
+        QString line = lineNeededToBeReadInstead != "" ? lineNeededToBeReadInstead : in.readLine();
+        lineNeededToBeReadInstead = "";
         if (type == GeneralTaskUtility::taskTypes::unknown) {
             if (line.endsWith(":::")) setNewSceneNameFromLine(line);
             else {
@@ -103,10 +200,18 @@ void ProjectReader::readFile(QString source) {
         }
 
         QString lastLine = generateObject(type, currentSceneName, in);
-        if (lastLine != "") in.readLineInto(&lastLine);
+        if (lastLine != "") {
+            lineNeededToBeReadInstead = lastLine;
+        }
         type = GeneralTaskUtility::taskTypes::unknown;
     }
 
     file.close();
+
+    JS_FreeContext(ctx);
+    ctx = nullptr;
+    JS_RunGC(rt);
+    JS_FreeRuntime(rt);
+    rt = nullptr;
 }
 

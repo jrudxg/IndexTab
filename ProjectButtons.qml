@@ -32,18 +32,18 @@ ListView {
 
 
         onClicked: name === "Create Project" ?
-        createFileDialog.open(".txt") :  openFileDialog.open(["Project files (*.txt)"])
+        createProjectDialog.open(".txt") :  openProjectDialog.open()
     }
 
-    OpenFileDialog {
-        id: openFileDialog
+    OpenFolderDialog {
+        id: openProjectDialog
         onProjectOpened: (project) => {
             LastProjectModel.openFile(project)
         }
     }
 
     CreateFileDialog {
-        id: createFileDialog
+        id: createProjectDialog
     }
 }
 

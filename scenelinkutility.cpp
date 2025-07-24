@@ -3,8 +3,6 @@
 #include <QRegularExpression>
 #include <QQmlProperty>
 
-SceneLinkUtility* SceneLinkUtility::instance = nullptr;
-
 // unwantedText is the text at the start (like P::) that should be ignored.
 // regex is used for splitting and can be ignored when amountOfNumbers 1 is.
 // returns an empty vector if an error occurs.
@@ -25,12 +23,17 @@ const std::function<bool(QString, QVariantMap&)> SceneLinkUtility::mapP = [](QSt
 };
 
 const std::function<bool(QString, QVariantMap&)> SceneLinkUtility::mapS = [](QString line, QVariantMap &map) {
-    if (auto numbers = GeneralTaskUtility::getNumberValuesFromLine("S::", line, 1, QRegularExpression()); !numbers.isEmpty()) {
-        map["scale"] = QVariantList(numbers.begin(), numbers.end());
+    if (auto number = GeneralTaskUtility::getNumberValuesFromLine("S::", line, 1, QRegularExpression()); !number.isEmpty()) {
+        map["scale"] = QVariant(number[0]);
+        return true;
+    }
+    if (auto numbers = GeneralTaskUtility::getNumberValuesFromLine("S::", line, 2, QRegularExpression(";")); !numbers.isEmpty()) {
+        map["size"] = QVariantList(numbers.begin(), numbers.end());
         return true;
     }
     return false;
 };
+
 
 const QMultiMap<QString, std::function<bool(QString, QVariantMap&)>>  SceneLinkUtility::dictionary = {
     {"N::", mapN},
@@ -49,6 +52,13 @@ void SceneLinkUtility::generateSceneLink(QQmlComponent* sceneLinkComponent, QQui
     QQmlProperty(sceneLink, "y").write(map["position"].toList()[1]);
     QQmlProperty(sceneLink, "sceneLink").write(map["sceneLink"]);
 
-    QVariant s = map["scale"];
-    if (s != QVariant()) QQmlProperty(sceneLink, "scale").write(s);
+    QVariant scale = map["scale"];
+    if (scale != QVariant()) QQmlProperty(sceneLink, "scale").write(scale);
+    else {
+        QVariantList size = qvariant_cast<QVariantList>(map["size"]);
+        if (size != QVariantList()) {
+            QQmlProperty(sceneLink, "width").write(size[0]);
+            QQmlProperty(sceneLink, "height").write(size[1]);
+        }
+    }
 }

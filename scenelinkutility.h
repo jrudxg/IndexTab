@@ -13,8 +13,7 @@ class SceneLinkUtility : public QObject
 
 public:
     explicit SceneLinkUtility(QObject* parent = nullptr)
-    : QObject{parent}
-    { if (SceneLinkUtility::instance == nullptr) SceneLinkUtility::instance = this; }
+        : QObject{parent} {}
 
     static void generateSceneLink(QQmlComponent* sceneLinkComponent, QQuickItem* scene, QVariantMap &map);
 
@@ -22,10 +21,8 @@ public:
 
     static const QVector<QString> getRequiredValuesNeeded() { return {"N::","P::"}; }
 private:
-    static SceneLinkUtility* instance;
 
     static const std::function<bool(QString, QVariantMap&)> mapN;
-
 
     static const std::function<bool(QString, QVariantMap&)> mapP;
 

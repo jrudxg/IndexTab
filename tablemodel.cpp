@@ -4,13 +4,13 @@ TableModel::TableModel(const int rows, const int columns, const QStringList rowH
     : QStandardItemModel(rows, columns, parent)
 {
 
-    if (rowHeaders == QStringList()) for (int i; i < rows; i++) setHeaderData(i, Qt::Vertical, QString::number(i));
+    if (rowHeaders == QStringList()) for (int i = 0; i < rows; i++) setHeaderData(i, Qt::Vertical, QString::number(i));
     else for (int i = 0; i < rows; ++i)  {
             if (i < rowHeaders.size()) setHeaderData(i, Qt::Vertical, rowHeaders[i].trimmed());
             else setHeaderData(i, Qt::Vertical, QString::number(i));
     }
 
-    if (columnHeaders == QStringList()) for (int i; i < columns; i++) setHeaderData(i, Qt::Horizontal, QString::number(i));
+    if (columnHeaders == QStringList()) for (int i = 0; i < columns; i++) setHeaderData(i, Qt::Horizontal, QString::number(i));
     else for (int i = 0; i < columns; ++i)  {
             if (i < columnHeaders.size()) setHeaderData(i, Qt::Horizontal, columnHeaders[i].trimmed());
             else setHeaderData(i, Qt::Horizontal, QString::number(i));

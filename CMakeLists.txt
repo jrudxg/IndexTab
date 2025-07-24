@@ -5,13 +5,13 @@ project(IndexTab VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick)
+find_package(Qt6 REQUIRED COMPONENTS Quick WebEngineQuick WebEngineCore)
 
 qt_standard_project_setup(REQUIRES 6.7.3)
 
 set(CMAKE_AUTORCC ON)
 
-
+add_subdirectory(quickjs)
 
 qt_add_executable(IndexTab
     main.cpp
@@ -29,18 +29,17 @@ qt_add_qml_module(IndexTab
 	FileFolder.qml
 	Menubar.qml
 	HomeScreen.qml
-	OpenFileDialog.qml
+	OpenFolderDialog.qml
 	CreateFileDialog.qml
 	HomeToolbar.qml
 	ToolbarLinks.qml
 	ProjectButtons.qml
 	ClickableTextImage.qml
 	LastProjectModel.qml
-	Flashcard.qml
+	TaskFlashcard.qml
 	Scene.qml
-	SceneLink.qml
-	Table.qml
-
+	TaskSceneLink.qml
+	TaskTable.qml
     SOURCES
     SOURCES filemanager.h filemanager.cpp
     SOURCES filemodel.h filemodel.cpp
@@ -51,11 +50,15 @@ qt_add_qml_module(IndexTab
     SOURCES generaltaskutility.h generaltaskutility.cpp
     SOURCES tablemodel.h tablemodel.cpp
     SOURCES tableutility.h tableutility.cpp
-
+    SOURCES
+    SOURCES textutility.h textutility.cpp
+    SOURCES
 
 
     RESOURCES
         resource.qrc
+	QML_FILES TaskText.qml
+	QML_FILES
 )
 
 set_target_properties(IndexTab PROPERTIES
@@ -65,7 +68,8 @@ set_target_properties(IndexTab PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
-target_link_libraries(IndexTab PRIVATE Qt6::Quick)
+target_include_directories(IndexTab PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/quickjs)
+target_link_libraries(IndexTab PRIVATE Qt6::Quick Qt6::WebEngineQuick Qt6::WebEngineCore ${CMAKE_CURRENT_SOURCE_DIR}/quickjs/build/Debug/quickjs.lib)
 
 include(GNUInstallDirs)
 install(TARGETS IndexTab

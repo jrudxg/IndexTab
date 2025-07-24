@@ -16,6 +16,7 @@ Item {
 
     signal fileCreated(project: string)
 
+
     FolderDialog {
         id: folderDialog
         title: "Select folder to save in"
@@ -23,15 +24,14 @@ Item {
         onAccepted: createDialog.open()
     }
 
-
-
     FileManager {
         id: fileManager
     }
 
     Dialog {
+
         id: createDialog
-        title: "Create file"
+        title: "Create Project"
         standardButtons: Dialog.Ok | Dialog.Cancel
         modal: true
 
@@ -42,10 +42,9 @@ Item {
         anchors.centerIn: Overlay.overlay
 
         onAccepted: {
-            var filePath = fileManager.createFile(folderDialog.selectedFolder, (textInput.text + extension))
-            if (parent.addToLastProjectModel) {
-                LastProjectModel.addNewFile(filePath)
-            }
+            var path = fileManager.createFolder(folderDialog.selectedFolder, textInput.text, true)
+            var filePath = fileManager.createFile(path, ("MAIN" + extension))
+            LastProjectModel.addNewFile(filePath)
             fileCreated(filePath)
         }
 
@@ -58,7 +57,7 @@ Item {
             anchors.centerIn: parent
 
             placeholderText: "Enter folder name: "
-            onAccepted: createDilaog.accept()
+            onAccepted: createDialog.accept()
         }
     }
 }

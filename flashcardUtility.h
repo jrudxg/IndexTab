@@ -23,18 +23,15 @@ class FlashcardUtility : public QObject
 
 public:
     explicit FlashcardUtility(QObject* parent = nullptr)
-    : QObject{parent}
-    { if (FlashcardUtility::instance == nullptr) FlashcardUtility::instance = this; }
+        : QObject{parent} {}
     // creates unordered and ordered answers and adds them with answer as the key to the map.
     // uAnswer (unchanged answer) is used when descrbing the normal text, the user writes.
-    // returns false if no element could be created
-    bool addElementToAnswers(const QString uAnswer);
+    //// returns false if no element could be created
+    //bool addElementToAnswers(const QString uAnswer);
 
     // cAnswer (changed answer) is used when descibing the answer, flashcardUtility created from uAnswer.
     // uAnswer (unchanged answer) is used when descrbing the normal text, the user writes.
-    Q_INVOKABLE QString getcAnswerFromuAnswer(QString uAnswer);
-
-    static FlashcardUtility* getInstance()  { return FlashcardUtility::instance; }
+    static const QString getcAnswerFromuAnswer(const QString uAnswer);
 
     static void generateFlashcard(QQmlComponent* flashcardComponent, QQuickItem* scene, QVariantMap &map);
 
@@ -44,9 +41,6 @@ public:
 
 
 private:
-    // a map holding the value of uAnswer as well as a pair of cAnswer and a pair of the unordered and ordered answer
-    QMap<QString, QPair<QString, QPair<QStringList, QStringList>>> answers;
-    static FlashcardUtility* instance;
 
     static const std::function<bool(QString, QVariantMap&)> mapA;
 

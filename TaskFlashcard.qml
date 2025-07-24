@@ -1,7 +1,5 @@
 import QtQuick
 
-import utility.flashcard
-
 Rectangle {
     id: root
 
@@ -15,7 +13,7 @@ Rectangle {
     height: 257
     color: "white"
 
-    property int textYOffset: height/6
+    property int textYOffset: height/4
     property int textXOffset: width/13
 
     MouseArea {
@@ -53,8 +51,8 @@ Rectangle {
         anchors.fill: parent
         acceptedButtons: Qt.RightButton
         onClicked: {
-            topText.text = (topText.text === root.question ? FlashcardUtil.getcAnswerFromuAnswer(root.answer) : root.question)
-            bottom.text = (bottomText.text === root.questionDescription ? root.answerDescription : root.questionDescription)
+            topText.text = (topText.text === root.question ? root.answer : root.question)
+            bottomText.text = (bottomText.text === root.questionDescription ? root.answerDescription : root.questionDescription)
         }
     }
 }
