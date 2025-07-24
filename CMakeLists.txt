@@ -40,7 +40,7 @@ qt_add_qml_module(IndexTab
 	Scene.qml
 	TaskSceneLink.qml
 	TaskTable.qml
-    SOURCES
+
     SOURCES filemanager.h filemanager.cpp
     SOURCES filemodel.h filemodel.cpp
     SOURCES flashcardUtility.h flashcardUtility.cpp
@@ -50,9 +50,7 @@ qt_add_qml_module(IndexTab
     SOURCES generaltaskutility.h generaltaskutility.cpp
     SOURCES tablemodel.h tablemodel.cpp
     SOURCES tableutility.h tableutility.cpp
-    SOURCES
     SOURCES textutility.h textutility.cpp
-    SOURCES
 
 
     RESOURCES
