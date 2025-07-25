@@ -34,8 +34,6 @@ Item {
         loadedProperties()
     }
 
-
-
     property string input: ""
     property string imagePath: ""
     property int textType: TaskText.TextTypeEnum.PlainText

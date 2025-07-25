@@ -7,26 +7,16 @@ QString FileManager::createFolder(QString directory,
                                   QString folderName,
                                   bool shouldCreateImageFolder) const
 {
-    qInfo() << "dir:" << directory;
 
     QString fileUrl = QStringLiteral(FILE_URL);
 
     QDir dir{directory.remove(fileUrl)};
 
-    qInfo() << directory;
-
-    qInfo() <<"folderPath:" << dir.absolutePath();
-
-    qInfo() << "fileUrl:" << fileUrl;
-
     if (dir.exists(folderName)) {
-        qInfo() << folderName;
         return QString();
     }
-    qInfo()<< "filePath:" << dir.absoluteFilePath(folderName);
 
     if (!dir.mkdir(folderName)) {
-        qInfo() << folderName << "2";
         return QString();
     }
 

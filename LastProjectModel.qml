@@ -17,7 +17,6 @@ Item {
 
     function setProjectsFolderLocation(selectedFolder) {
         var mainPath = "file:///" + fileManager.createFolder(selectedFolder, "IndexTab", false);
-        console.log("mainPath", mainPath)
         var path = "file:///" + fileManager.createFolder(mainPath, "Projects", false)
         projectsFolderLocation = mainPath
         settings.projectsLocation = mainPath
