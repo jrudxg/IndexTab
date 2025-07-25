@@ -1,17 +1,21 @@
 #ifndef GENERALTASKUTILITY_H
 #define GENERALTASKUTILITY_H
 
+#include <QFile>
 #include <QObject>
 #include <QRegularExpression>
-#include <QFile>
 
 class GeneralTaskUtility : QObject
 {
     Q_OBJECT
 public:
-    explicit GeneralTaskUtility(QObject* parent = nullptr)
-        : QObject{parent} {}
-    static const QVector<float> getNumberValuesFromLine(const QString &unwantedText, const QString &line, const int amountOfNumbers, const QRegularExpression regex);
+    explicit GeneralTaskUtility(QObject *parent = nullptr)
+        : QObject{parent}
+    {}
+    static const QVector<float> getNumberValuesFromLine(const QString &unwantedText,
+                                                        const QString &line,
+                                                        const int amountOfNumbers,
+                                                        const QRegularExpression regex);
 
     static const QStringList splitAtFirstTwoCommas(const QString &line);
 
@@ -25,14 +29,7 @@ public:
 
     static const QString removeTrippleColumns(const QString &line);
 
-    enum taskTypes {
-        Flashcard,
-        Table,
-        Link,
-        Text,
-        size,
-        unknown
-    };
+    enum taskTypes { Flashcard, Table, Link, Text, size, unknown };
 };
 
 #endif // GENERALTASKUTILITY_H

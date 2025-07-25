@@ -941,8 +941,8 @@ var convertMarkdownToHTML = (() => {
     return _hasOwnProperty.call(object, key);
   }
   function assign(obj) {
-    const sources = Array.prototype.slice.call(arguments, 1);
-    sources.forEach(function(source) {
+    const src = Array.prototype.slice.call(arguments, 1);
+    src.forEach(function(source) {
       if (!source) {
         return;
       }
@@ -4504,8 +4504,8 @@ var convertMarkdownToHTML = (() => {
 
   // node_modules/linkify-it/index.mjs
   function assign2(obj) {
-    const sources = Array.prototype.slice.call(arguments, 1);
-    sources.forEach(function(source) {
+    const src = Array.prototype.slice.call(arguments, 1);
+    src.forEach(function(source) {
       if (!source) {
         return;
       }

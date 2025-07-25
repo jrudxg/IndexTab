@@ -76340,7 +76340,7 @@ static JSValue js_std_urlGet(JSContext *ctx, JSValueConst this_val,
                                   response,
                                   JS_PROP_C_W_E);
         if (!JS_IsNull(response)) {
-            JS_DefinePropertyValueStr(ctx, ret_obj, "responseHeaders",
+            JS_DefinePropertyValueStr(ctx, ret_obj, "responseinclude",
                                       JS_NewStringLen(ctx, (char *)header_buf->buf,
                                                       header_buf->size),
                                       JS_PROP_C_W_E);

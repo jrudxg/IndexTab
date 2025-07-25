@@ -8,7 +8,11 @@ class TableModel : public QStandardItemModel
 {
     Q_OBJECT
 public:
-    TableModel(const int rows, const int columns, const QStringList rowHeaders = QStringList(), const QStringList columnHeaders = QStringList(), QObject *parent = nullptr);
+    TableModel(const int rows,
+               const int columns,
+               const QStringList rowinclude = QStringList(),
+               const QStringList columninclude = QStringList(),
+               QObject *parent = nullptr);
 
     bool addValuesToRow(const QStringList values, const QString verticalHeaderName = "");
 
@@ -20,4 +24,4 @@ signals:
 
 #endif // TABLEMODEL_H
 
-Q_DECLARE_METATYPE(TableModel*);
+Q_DECLARE_METATYPE(TableModel *);

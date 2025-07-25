@@ -1,15 +1,16 @@
-#include <QTimer>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QTimer>
+#include <QSettings>
 
-#include <QtWebEngineQuick/qtwebenginequickglobal.h>
 #include <QQuickWebEngineProfile>
+#include <QtWebEngineQuick/qtwebenginequickglobal.h>
 
-#include "fileModel.h"
-#include "filemanager.h"
-#include "projectreader.h"
-#include "scenedatamodel.h"
-#include "tablemodel.h"
+#include "include/filemodel.h"
+#include "include/filemanager.h"
+#include "include/projectreader.h"
+#include "include/scenedatamodel.h"
+#include "include/tablemodel.h"
 
 int main(int argc, char *argv[])
 {
@@ -22,15 +23,16 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-
     qmlRegisterType<FileModel>("file.model", 1, 0, "FileModel");
     qmlRegisterType<FileManager>("file.manager", 1, 0, "FileManager");
 
     qmlRegisterType<TableModel>("table.model", 1, 0, "TaskTableModel");
 
-    qmlRegisterSingletonInstance<SceneDataModel>("sceneData.model", 1, 0, "SceneDataModel", new SceneDataModel(engine));
-
-
+    qmlRegisterSingletonInstance<SceneDataModel>("sceneData.model",
+                                                 1,
+                                                 0,
+                                                 "SceneDataModel",
+                                                 new SceneDataModel(engine));
 
     QObject::connect(
         &engine,
@@ -40,22 +42,30 @@ int main(int argc, char *argv[])
         Qt::QueuedConnection
     );
 
-    QString projectPath = "C:/Users/afreu/Documents/Projects/B";
-    QString imagePath = projectPath + "/images";
+        QSettings settings;
+    {
+        QDir projectDir{settings.value("projectsLocation").toString().remove("file://")};
 
+        if (!projectDir.isReadable()) {
+            settings.remove("projectsLocation");
+            settings.remove("sourceOfLastEditedProject");
+        }
+        else {
+            QFile lastEditedProject{settings.value("sourceOfLastEditedProject").toString().remove("file://")};
+            if (!lastEditedProject.exists()) settings.remove("sourceOfLastEditedProject");
+        }
 
+    }
+    QString filePath = settings.value("sourceOfLastEditedProject").toString().remove("file://").chopped(9);
     ProjectReader reader;
-    reader.readDir("C:/Users/afreu/Documents/Projects/B");
+    reader.readDir(filePath);
 
-    QQuickWebEngineProfile* profile = QQuickWebEngineProfile::defaultProfile();
+    QQuickWebEngineProfile *profile = QQuickWebEngineProfile::defaultProfile();
 
     QObject::connect(&app, &QCoreApplication::aboutToQuit, []() {
-        QTimer::singleShot(0, []() {
-            delete QQuickWebEngineProfile::defaultProfile();
-        });
+        QTimer::singleShot(0, []() { delete QQuickWebEngineProfile::defaultProfile(); });
     });
 
-    engine.load(QUrl(QStringLiteral("IndexTab/Main.qml")));
-
+    engine.loadFromModule("IndexTab", "Main");
     return app.exec();
 }

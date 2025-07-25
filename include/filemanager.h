@@ -1,8 +1,8 @@
 #ifndef FILEMANAGER_H
 #define FILEMANAGER_H
 
-#include <QObject>
 #include <QDir>
+#include <QObject>
 
 class FileManager : public QObject
 {
@@ -10,24 +10,30 @@ class FileManager : public QObject
 
 public:
     explicit FileManager(QObject *parent = nullptr)
-    : QObject(parent) {}
+        : QObject(parent)
+    {}
 
     // returns the folder path from the folder created
     // if no folder is created, it returns an empty QString
-    Q_INVOKABLE QString createFolder(QString directory, QString fileName, bool shouldCreateImageFolder = false) const;
+    Q_INVOKABLE QString createFolder(QString directory,
+                                     QString fileName,
+                                     bool shouldCreateImageFolder = false) const;
     // returns the file path from the file created
     // if no file is created, it returns an empty QString
     Q_INVOKABLE QString createFile(QString directory, QString fileName) const;
 
-    Q_INVOKABLE bool deleteFile(QString directory) const;
+    Q_INVOKABLE bool deleteFolder(QString fileDirectory) const;
 
     // also works with Files
-    Q_INVOKABLE bool doesFolderExist(QString file) { return QDir(file.remove("file:///")).exists() && !file.isEmpty(); }
+    Q_INVOKABLE bool doesFolderExist(QString file)
+    {
+        return QDir(file.remove("file:///")).exists() && !file.isEmpty();
+    }
 
-    static FileManager* getInstance();
+    static FileManager *getInstance();
 
 private:
-    static FileManager* fileManager_Singelton;
+    static FileManager *fileManager_Singelton;
 };
 
 #endif // FILEMANAGER_H

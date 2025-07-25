@@ -1,14 +1,13 @@
 #ifndef PROJECTREADER_H
 #define PROJECTREADER_H
 
-#include <QObject>
 #include <QDir>
-#include <generaltaskutility.h>
+#include <QObject>
+#include "generaltaskutility.h"
 
 extern "C" {
 #include "quickjs.h"
 }
-
 
 class ProjectReader : public QObject
 {
@@ -16,12 +15,15 @@ class ProjectReader : public QObject
 
 public:
     explicit ProjectReader(QObject *parent = nullptr)
-    : QObject{parent} {}
+        : QObject{parent}
+    {}
 
     void readDir(QString path);
-private:
 
-    QString generateObject(GeneralTaskUtility::taskTypes type, QString currentSceneName, QTextStream &in);
+private:
+    QString generateObject(GeneralTaskUtility::taskTypes type,
+                           QString currentSceneName,
+                           QTextStream &in);
 
     QString generateHTMLFromMarkdown(QString markdown);
 
@@ -32,13 +34,12 @@ private:
     QString imagePath{};
 
     QString currentSceneName;
-    QDir* currentDir;
+    QDir *currentDir;
 
     void setNewSceneNameFromLine(QString line);
 
-    JSRuntime* rt = nullptr;
-    JSContext* ctx = nullptr;
+    JSRuntime *rt = nullptr;
+    JSContext *ctx = nullptr;
 };
 
 #endif // PROJECTREADER_H
-

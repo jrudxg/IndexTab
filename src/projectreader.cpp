@@ -1,18 +1,18 @@
-#include "projectreader.h"
-#include "scenedatamodel.h"
-#include "flashcardUtility.h"
-#include "scenelinkutility.h"
-#include "tableutility.h"
-#include "textutility.h"
-#include <QMultiMap>
+#include "include/projectreader.h"
 #include <QJSEngine>
 #include <QJSValue>
 #include <QJSValueIterator>
-
+#include <QMultiMap>
+#include "include/flashcardUtility.h"
+#include "include/scenedatamodel.h"
+#include "include/scenelinkutility.h"
+#include "include/tableutility.h"
+#include "include/textutility.h"
 
 // generates with markdown-it and many plugins a html file
 // uses quickjs (https://github.com/quickjs-ng/quickjs)
-QString ProjectReader::generateHTMLFromMarkdown(QString markdown) {
+QString ProjectReader::generateHTMLFromMarkdown(QString markdown)
+{
     JSValue global = JS_GetGlobalObject(ctx);
     QString html = "";
 
@@ -20,14 +20,14 @@ QString ProjectReader::generateHTMLFromMarkdown(QString markdown) {
     markdown.replace("\\}", "\\\\}");
 
     JSValue object = JS_GetPropertyStr(ctx, global, "convertMarkdownToHTML");
-    JSValue func = JS_GetPropertyStr(ctx, object,  "convertMarkdownToHTML");
+    JSValue func = JS_GetPropertyStr(ctx, object, "convertMarkdownToHTML");
 
     JSValue arg[1];
     arg[0] = JS_NewString(ctx, markdown.toStdString().c_str());
 
     JSValue result = JS_Call(ctx, func, object, 1, arg);
 
-    const char* cstr = JS_ToCString(ctx, result);
+    const char *cstr = JS_ToCString(ctx, result);
 
     html = QString::fromUtf8(cstr);
 
@@ -36,7 +36,6 @@ QString ProjectReader::generateHTMLFromMarkdown(QString markdown) {
     JS_FreeValue(ctx, result);
     JS_FreeValue(ctx, arg[0]);
 
-
     JS_FreeValue(ctx, func);
     JS_FreeValue(ctx, object);
     JS_FreeValue(ctx, global);
@@ -44,38 +43,41 @@ QString ProjectReader::generateHTMLFromMarkdown(QString markdown) {
     return html;
 }
 
-QString ProjectReader::insertHTMLinHTMLTemplate(QString textToInsert) {
+QString ProjectReader::insertHTMLinHTMLTemplate(QString textToInsert)
+{
     return HTMLTemplateText.replace("${result}", textToInsert);
 }
 
-GeneralTaskUtility::taskTypes getTaskTypeOfString(const QString &line) {
-
-    if (line.size() < 5 || line.mid(3, 2) != "::") return GeneralTaskUtility::taskTypes::unknown;
+GeneralTaskUtility::taskTypes getTaskTypeOfString(const QString &line)
+{
+    if (line.size() < 5 || line.mid(3, 2) != "::")
+        return GeneralTaskUtility::taskTypes::unknown;
     QString potentialTaskType = line.first(3);
 
-    if (const auto& it = SceneDataModel::taskTypeDictionary.find(potentialTaskType); it != SceneDataModel::taskTypeDictionary.end()) {
+    if (const auto &it = SceneDataModel::taskTypeDictionary.find(potentialTaskType);
+        it != SceneDataModel::taskTypeDictionary.end()) {
         return it.value();
     }
     return GeneralTaskUtility::taskTypes::unknown;
 }
 
-
 // make sure that there are 3 colons at the end of the string
-void ProjectReader::setNewSceneNameFromLine(QString line) {
+void ProjectReader::setNewSceneNameFromLine(QString line)
+{
     currentSceneName = GeneralTaskUtility::removeTrippleColumns(line.trimmed());
 }
 
-
-QString ProjectReader::generateObject(GeneralTaskUtility::taskTypes type, QString currentSceneName, QTextStream &in) {
-
+QString ProjectReader::generateObject(GeneralTaskUtility::taskTypes type,
+                                      QString currentSceneName,
+                                      QTextStream &in)
+{
     QVariantMap map{};
     QVector<QString> requiredValuesNeeded;
-    QMultiMap<QString, std::function<bool(QString, QVariantMap&)>> dictionary;
+    QMultiMap<QString, std::function<bool(QString, QVariantMap &)>> dictionary;
 
     if (type == GeneralTaskUtility::taskTypes::Flashcard) {
         requiredValuesNeeded = FlashcardUtility::getRequiredValuesNeeded();
         dictionary = FlashcardUtility::dictionary;
-
     }
 
     if (type == GeneralTaskUtility::taskTypes::Link) {
@@ -87,12 +89,11 @@ QString ProjectReader::generateObject(GeneralTaskUtility::taskTypes type, QStrin
         requiredValuesNeeded = TableUtility::getMinimumRequiredValuesNeeded();
         dictionary = TableUtility::dictionary;
 
-        int rowCount = TableUtility::generateTableModel(in.readLine(), map );
+        int rowCount = TableUtility::generateTableModel(in.readLine(), map);
         TableUtility::addRowsToValuesAndDictionary(&requiredValuesNeeded, &dictionary, rowCount);
     }
 
     if (type == GeneralTaskUtility::taskTypes::Text) {
-
         requiredValuesNeeded = TextUtility::getRequiredValuesNeeded();
         dictionary = TextUtility::dictionary;
 
@@ -101,9 +102,9 @@ QString ProjectReader::generateObject(GeneralTaskUtility::taskTypes type, QStrin
         QStringList endingSequences = TextUtility::getEndingSequences();
         QString line = in.readLine();
 
-
-        for (; !endingSequences.contains(line); line = in.readLine() ) {
-            if (in.atEnd()) return "";
+        for (; !endingSequences.contains(line); line = in.readLine()) {
+            if (in.atEnd())
+                return "";
             text.append(line + '\n');
         }
 
@@ -120,20 +121,25 @@ QString ProjectReader::generateObject(GeneralTaskUtility::taskTypes type, QStrin
     }
 
 startOfLoop:
-    if (in.atEnd()) dictionary = {};
+    if (in.atEnd())
+        dictionary = {};
     QString line = in.readLine();
 
     // skips when a comment is detected
-    if (line.startsWith('#')) goto startOfLoop;
+    if (line.startsWith('#'))
+        goto startOfLoop;
 
     line = GeneralTaskUtility::removeComment(line);
 
     for (auto it = dictionary.begin(); it != dictionary.end(); ++it) {
-        if (!line.startsWith(it.key())) continue;
-        if (!dictionary.value(it.key())(line, map)) return "";
+        if (!line.startsWith(it.key()))
+            continue;
+        if (!dictionary.value(it.key())(line, map))
+            return "";
 
         for (int i = 0; i < requiredValuesNeeded.size(); ++i) {
-            if (it.key() == requiredValuesNeeded[i]) requiredValuesNeeded.remove(i,1);
+            if (it.key() == requiredValuesNeeded[i])
+                requiredValuesNeeded.remove(i, 1);
         }
 
         dictionary.erase(it);
@@ -147,9 +153,8 @@ startOfLoop:
     return line;
 }
 
-
-void ProjectReader::readDir(QString path) {
-
+void ProjectReader::readDir(QString path)
+{
     imagePath = path + "/images/";
 
     if (HTMLTemplateText == "") {
@@ -177,7 +182,6 @@ void ProjectReader::readDir(QString path) {
 
     currentDir = new QDir(path);
     QFile file = currentDir->filePath("MAIN.txt");
-
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
         return;
     }
@@ -187,16 +191,16 @@ void ProjectReader::readDir(QString path) {
     QTextStream in(&file);
     QString lineNeededToBeReadInstead{};
     while (!in.atEnd()) {
-
-
         QString line = lineNeededToBeReadInstead != "" ? lineNeededToBeReadInstead : in.readLine();
         lineNeededToBeReadInstead = "";
         if (type == GeneralTaskUtility::taskTypes::unknown) {
-            if (line.endsWith(":::")) setNewSceneNameFromLine(line);
+            if (line.endsWith(":::"))
+                setNewSceneNameFromLine(line);
             else {
                 type = getTaskTypeOfString(line);
             }
-            if (type == GeneralTaskUtility::taskTypes::unknown) continue;
+            if (type == GeneralTaskUtility::taskTypes::unknown)
+                continue;
         }
 
         QString lastLine = generateObject(type, currentSceneName, in);
@@ -214,4 +218,3 @@ void ProjectReader::readDir(QString path) {
     JS_FreeRuntime(rt);
     rt = nullptr;
 }
-

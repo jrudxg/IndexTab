@@ -18,12 +18,12 @@
 
 class FlashcardUtility : public QObject
 {
-
     Q_OBJECT
 
 public:
-    explicit FlashcardUtility(QObject* parent = nullptr)
-        : QObject{parent} {}
+    explicit FlashcardUtility(QObject *parent = nullptr)
+        : QObject{parent}
+    {}
     // creates unordered and ordered answers and adds them with answer as the key to the map.
     // uAnswer (unchanged answer) is used when descrbing the normal text, the user writes.
     //// returns false if no element could be created
@@ -33,25 +33,25 @@ public:
     // uAnswer (unchanged answer) is used when descrbing the normal text, the user writes.
     static const QString getcAnswerFromuAnswer(const QString uAnswer);
 
-    static void generateFlashcard(QQmlComponent* flashcardComponent, QQuickItem* scene, QVariantMap &map);
+    static void generateFlashcard(QQmlComponent *flashcardComponent,
+                                  QQuickItem *scene,
+                                  QVariantMap &map);
 
-    static const QMultiMap<QString, std::function<bool(QString, QVariantMap&)>> dictionary;
+    static const QMultiMap<QString, std::function<bool(QString, QVariantMap &)>> dictionary;
 
-    static const QVector<QString> getRequiredValuesNeeded() { return {"Q::","A::","P::"}; }
-
+    static const QVector<QString> getRequiredValuesNeeded() { return {"Q::", "A::", "P::"}; }
 
 private:
+    static const std::function<bool(QString, QVariantMap &)> mapA;
 
-    static const std::function<bool(QString, QVariantMap&)> mapA;
+    static const std::function<bool(QString, QVariantMap &)> mapQ;
 
-    static const std::function<bool(QString, QVariantMap&)> mapQ;
+    static const std::function<bool(QString, QVariantMap &)> mapDQ;
 
-    static const std::function<bool(QString, QVariantMap&)> mapDQ;
+    static const std::function<bool(QString, QVariantMap &)> mapDA;
 
-    static const std::function<bool(QString, QVariantMap&)> mapDA;
+    static const std::function<bool(QString, QVariantMap &)> mapP;
 
-    static const std::function<bool(QString, QVariantMap&)> mapP;
-
-    static const std::function<bool(QString, QVariantMap&)> mapS;
+    static const std::function<bool(QString, QVariantMap &)> mapS;
 };
 #endif // FLASHCARDUTILITY_H

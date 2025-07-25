@@ -1,6 +1,8 @@
 import QtQuick
 import QtQuick.Dialogs
 import QtQuick.Controls
+import Qt.labs.folderlistmodel
+import Qt.labs.platform as Platform
 
 import file.manager
 
@@ -16,12 +18,15 @@ Item {
 
     signal fileCreated(project: string)
 
-
     FolderDialog {
         id: folderDialog
         title: "Select folder to save in"
         currentFolder: LastProjectModel.projectsFolderLocation
-        onAccepted: createDialog.open()
+
+        onAccepted: {
+            createDialog.open()
+        }
+
     }
 
     FileManager {
@@ -42,9 +47,9 @@ Item {
         anchors.centerIn: Overlay.overlay
 
         onAccepted: {
-            var path = fileManager.createFolder(folderDialog.selectedFolder, textInput.text, true)
-            var filePath = fileManager.createFile(path, ("MAIN" + extension))
-            LastProjectModel.addNewFile(filePath)
+            var path = "file:///" + fileManager.createFolder(folderDialog.selectedFolder, textInput.text, true)
+            var filePath = "file:///" + fileManager.createFile(path, ("MAIN" + extension))
+            LastProjectModel.addNewFile(path)
             fileCreated(filePath)
         }
 

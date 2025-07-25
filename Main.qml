@@ -1,7 +1,10 @@
 import QtQuick
+import QtCore
 import QtQuick.Controls
 import sceneData.model
 import QtWebEngine
+import Qt.labs.platform as Platform
+import QtQuick.Dialogs
 
 Window {
     width: 3840
@@ -38,11 +41,29 @@ Window {
             }
         }
 
-        onEditButtonClicked: pageLoader.sourceComponent = editScreen
+        onEditButtonClicked: loadEditScreenWhenFileExists()
 
         onPlayButtonClicked: pageLoader.sourceComponent = playScreen
         onSettingsButtonClicked: pageLoader.sourceComponent = settingsScreen
     }
+
+    Component.onCompleted: {
+        if (LastProjectModel.projectsFolderLocation === "") {
+            folderDialog.open()
+        }
+    }
+
+    FolderDialog {
+        id: folderDialog
+        title: qsTr("Choose folderpath to create project folder")
+
+        currentFolder: Platform.StandardPaths.writableLocation(Platform.StandardPaths.HomeLocation)
+
+        onAccepted: {
+            LastProjectModel.setProjectsFolderLocation(selectedFolder)
+        }
+    }
+
 
     Loader {
         id: pageLoader
@@ -98,30 +119,34 @@ Window {
                          contentY = r.y+r.height-height;
                  }
 
-                 TextEdit {
-                     id: textEdit
-                     text: LastProjectModel.getText()
+                TextEdit {
+                    id: textEdit
+                    text: LastProjectModel.getText()
 
-                     focus: true
-                     wrapMode: Text.Wrap
-                     onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
+                    wrapMode: Text.Wrap
+                    onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
 
-                     Connections {
-                         target: LastProjectModel
+                    Component.onCompleted: {
+                        focus = true
+                    }
 
-                         function onFileOpened() {
-                             text = LastProjectModel.getText()
-                         }
 
-                         function onFileCreated() {
-                             text = LastProjectModel.getText()
-                         }
+                    Connections {
+                     target: LastProjectModel
+
+                     function onFileOpened() {
+                         text = LastProjectModel.getText()
                      }
 
-                     width: flick.width
+                     function onFileCreated() {
+                         text = LastProjectModel.getText()
+                     }
+                    }
 
-                     font.pointSize: 25
-                 }
+                    width: flick.width
+
+                    font.pointSize: 25
+                }
 
              }
 
@@ -132,7 +157,7 @@ Window {
                     top: parent.top
                 }
 
-                text: LastProjectModel.lastEditedProjectsSource
+                text: LastProjectModel.lastEditedProjectsSource.substring(0)
                 font.pointSize: 11
                 color: Qt.lightGray
             }

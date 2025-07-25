@@ -68,24 +68,20 @@ Item {
         WebEngineView {
             anchors.fill: parent
             Component.onCompleted: {
-                loadHtml(root.input, root.imagePath)
+                loadHtml(root.input, "file://" + root.imagePath)
             }
 
-            onNavigationRequested: function(request) {
-                    var url = request.url.toString()
-                    if (url.startsWith("scene://")) {
-                        // Verhindere Navigation
-                        request.reject()
-                        // Deine eigene Aktion, z.B. Szene wechseln
-                        SceneDataModel.setCurrentScenePerName(url.substring(8))
 
-                        // Beispiel: Signal an QML oder C++ emitten, Szene laden, ...
-                        // mySceneLoader.loadScene(url)
-                    } else {
-                        // Erlaube normale Navigation
-                        request.accept()
-                    }
+
+            onNavigationRequested: function(request) {
+                var url = request.url.toString()
+                if (url.startsWith("scene://")) {
+                    request.reject()
+                    SceneDataModel.setCurrentScenePerName(url.substring(8))
+                } else {
+                    request.accept()
                 }
+            }
         }
     }
 }

@@ -2,8 +2,6 @@ pragma Singleton
 
 import QtCore
 import  QtQuick
-import Qt.labs.platform as Platform
-import QtQuick.Dialogs
 
 import  file.model
 import file.manager
@@ -17,10 +15,18 @@ Item {
     signal fileCreated()
 
 
+    function setProjectsFolderLocation(selectedFolder) {
+        var mainPath = "file:///" + fileManager.createFolder(selectedFolder, "IndexTab", false);
+        var path = "file:///" + fileManager.createFolder(mainPath, "Projects", false)
+        projectsFolderLocation = mainPath
+        settings.projectsLocation = mainPath
+    }
+
+
     function addNewFile(path)   {
 
         if (fileModel.addNewFile(path)) {
-            settings.sourceOfLastEditedProject = path
+            settings.sourceOfLastEditedProject = path.replace("file://", "")
             fileCreated()
             return true
         }
@@ -36,9 +42,10 @@ Item {
     }
 
     function openFile(path) {
-        settings.sourceOfLastEditedProject = path + '/' + "MAIN.txt"
+        settings.sourceOfLastEditedProject = path.replace("file://", "") + '/' + "MAIN.txt"
         fileOpened()
     }
+
 
     function getText() { return fileModel.getTextFromModelEntry(settings.sourceOfLastEditedProject) }
     function saveText(text) { return fileModel.saveTextToModelEntry(text, settings.sourceOfLastEditedProject) }
@@ -49,15 +56,6 @@ Item {
         property string sourceOfLastEditedProject: ""
     }
 
-    FolderDialog {
-        id: folderDialog
-        title: qsTr("Choose folderpath to create project folder")
-        currentFolder: Platform.StandardPaths.writableLocation(Platform.StandardPaths.DocumentsLocation)
-        onAccepted: {
-            settings.projectsLocation = "file:///" + fileManager.createFolder(selectedFolder, "Projects")
-            lastProjectModel.projectsFolderLocation = settings.projectsLocation
-        }
-    }
 
     FileManager {
         id: fileManager
@@ -67,8 +65,10 @@ Item {
     id: fileModel
 
         Component.onCompleted: {
-            if (!fileManager.doesFolderExist(settings.projectsLocation)) folderDialog.open()
-            addFromFolderPath(settings.projectsLocation)
+
+            if (settings.projectsLocation != "") {
+                addFromFolderPath(settings.projectsLocation + '/' + "Projects")
+            }        
         }
     }
 }
