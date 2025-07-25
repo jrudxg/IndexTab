@@ -18,6 +18,13 @@ qt_add_executable(IndexTabApp
 
 add_subdirectory(quickjs)
 
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    set(FILE_URL "file:///")
+elseif (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(FILE_URL "file://")
+endif()
+target_compile_definitions(IndexTabApp PRIVATE FILE_URL="${FILE_URL}")
+
 add_subdirectory(src)
 add_subdirectory(include)
 

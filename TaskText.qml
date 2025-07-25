@@ -1,6 +1,7 @@
 import QtQuick
 import QtWebEngine
 import sceneData.model
+import file.manager
 
 Item {
     id: root
@@ -63,12 +64,17 @@ Item {
             font.pointSize: 20
         }
     }
+
+    FileManager {
+        id: fileManager
+    }
+
     Component {
         id: webEngineView
         WebEngineView {
             anchors.fill: parent
             Component.onCompleted: {
-                loadHtml(root.input, "file://" + root.imagePath)
+                loadHtml(root.input, fileManager.getFileUrl() + root.imagePath)
             }
 
 

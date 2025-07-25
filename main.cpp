@@ -14,6 +14,8 @@
 
 int main(int argc, char *argv[])
 {
+    QString fileUrl = QStringLiteral(FILE_URL);
+
     QCoreApplication::setOrganizationName("MyCompany");
     QCoreApplication::setOrganizationDomain("https://github.com/AndiFriend/IndexTab");
     QCoreApplication::setApplicationName("IndexTab");
@@ -42,21 +44,23 @@ int main(int argc, char *argv[])
         Qt::QueuedConnection
     );
 
-        QSettings settings;
+    QSettings settings;
+    QString filePath{};
     {
-        QDir projectDir{settings.value("projectsLocation").toString().remove("file://")};
+        QDir projectDir{settings.value("projectsLocation").toString().remove(fileUrl)};
 
         if (!projectDir.isReadable()) {
             settings.remove("projectsLocation");
             settings.remove("sourceOfLastEditedProject");
         }
         else {
-            QFile lastEditedProject{settings.value("sourceOfLastEditedProject").toString().remove("file://")};
+            QFile lastEditedProject{settings.value("sourceOfLastEditedProject").toString().remove(fileUrl)};
             if (!lastEditedProject.exists()) settings.remove("sourceOfLastEditedProject");
+            else filePath = settings.value("sourceOfLastEditedProject").toString().remove(fileUrl).chopped(9);
         }
 
     }
-    QString filePath = settings.value("sourceOfLastEditedProject").toString().remove("file://").chopped(9);
+
     ProjectReader reader;
     reader.readDir(filePath);
 

@@ -6,7 +6,10 @@
 
 bool FileModel::addFromFolderPath(QString path)
 {
-    QDirIterator it(path.remove("file://"));
+
+    QString fileUrl = QStringLiteral(FILE_URL);
+
+    QDirIterator it(path.remove(fileUrl));
 
     bool allFilesAddedToModel = true;
 
@@ -40,7 +43,10 @@ bool FileModel::addNewFileToModel(QString path)
 
 bool FileModel::addNewFile(QString path)
 {
-    return addNewFileToModel(path.remove("file://"));
+
+    QString fileUrl = QStringLiteral(FILE_URL);
+
+    return addNewFileToModel(path.remove(fileUrl));
 }
 
 bool FileModel::removeFile(QString path)
@@ -59,8 +65,11 @@ bool FileModel::removeFile(QString path)
 
 QString FileModel::getTextFromModelEntry(QString fileSource) const
 {
+
+    QString fileUrl = QStringLiteral(FILE_URL);
+
     // chops of MAIN.txt
-    const QString project = fileSource.remove("file://").chopped(9);
+    const QString project = fileSource.remove(fileUrl).chopped(9);
 
     for (auto &data : std::as_const(m_data)) {
         if (project == data.second) {
@@ -76,8 +85,11 @@ QString FileModel::getTextFromModelEntry(QString fileSource) const
 }
 bool FileModel::saveTextToModelEntry(const QString &text, QString fileSource) const
 {
+
+    QString fileUrl = QStringLiteral(FILE_URL);
+
     // chops of MAIN.txt
-    const QString project = fileSource.remove("file:///").chopped(9);
+    const QString project = fileSource.remove(fileUrl).chopped(9);
     for (auto &data : std::as_const(m_data)) {
         if (project == data.second) {
             QFile file(fileSource);

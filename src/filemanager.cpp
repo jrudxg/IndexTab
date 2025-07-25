@@ -1,20 +1,32 @@
 #include "include/filemanager.h"
+#include <QStringLiteral>
 
-FileManager *FileManager::fileManager_Singelton = 0;
+FileManager *FileManager::fileManager_Singelton = nullptr;
 
 QString FileManager::createFolder(QString directory,
                                   QString folderName,
                                   bool shouldCreateImageFolder) const
 {
-    // only removing 2 slashes, so the path keeps beeing absolute
-    QDir dir = directory.remove("file://");
+    qInfo() << "dir:" << directory;
+
+    QString fileUrl = QStringLiteral(FILE_URL);
+
+    QDir dir{directory.remove(fileUrl)};
+
+    qInfo() << directory;
+
+    qInfo() <<"folderPath:" << dir.absolutePath();
+
+    qInfo() << "fileUrl:" << fileUrl;
 
     if (dir.exists(folderName)) {
+        qInfo() << folderName;
         return QString();
     }
-
+    qInfo()<< "filePath:" << dir.absoluteFilePath(folderName);
 
     if (!dir.mkdir(folderName)) {
+        qInfo() << folderName << "2";
         return QString();
     }
 
@@ -25,25 +37,41 @@ QString FileManager::createFolder(QString directory,
             return QString();
     }
     QString dirPath = dir.absoluteFilePath(folderName);
-    return dirPath.last(dirPath.size()-1);
+    if (fileUrl == "file://")   {
+        return dirPath.mid(1);
+    }
+    else return dirPath;
+}
+
+QString FileManager::getFileUrl() {
+    return QStringLiteral(FILE_URL);
 }
 
 QString FileManager::createFile(QString directory, QString fileName) const
 {
-    QDir dir(directory.remove("file://"));
+
+    QString fileUrl = QStringLiteral(FILE_URL);
+
+    QDir dir(directory.remove(fileUrl));
 
     if (dir.exists(fileName)) return QString();
 
     QFile file{directory + '/' + fileName};
     file.open(QIODevice::WriteOnly);
     file.close();
+    if (fileUrl == "file://")   {
+        return dir.path().mid(1) + '/' + fileName;
+    }
+    else return dir.path() + '/' + fileName;
 
-    return dir.path().mid(1) + '/' + fileName;
 }
 
 bool FileManager::deleteFolder(QString directory) const
 {
-    QDir dir(directory.remove("file://"));
+
+    QString fileUrl = QStringLiteral(FILE_URL);
+
+    QDir dir(directory.remove(fileUrl));
     if (!dir.exists()) {
         return false;
     }

@@ -24,11 +24,7 @@ public:
 
     Q_INVOKABLE bool deleteFolder(QString fileDirectory) const;
 
-    // also works with Files
-    Q_INVOKABLE bool doesFolderExist(QString file)
-    {
-        return QDir(file.remove("file:///")).exists() && !file.isEmpty();
-    }
+    Q_INVOKABLE QString getFileUrl();
 
     static FileManager *getInstance();
 

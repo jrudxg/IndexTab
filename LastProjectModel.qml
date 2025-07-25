@@ -17,6 +17,7 @@ Item {
 
     function setProjectsFolderLocation(selectedFolder) {
         var mainPath = "file:///" + fileManager.createFolder(selectedFolder, "IndexTab", false);
+        console.log("mainPath", mainPath)
         var path = "file:///" + fileManager.createFolder(mainPath, "Projects", false)
         projectsFolderLocation = mainPath
         settings.projectsLocation = mainPath
@@ -26,7 +27,7 @@ Item {
     function addNewFile(path)   {
 
         if (fileModel.addNewFile(path)) {
-            settings.sourceOfLastEditedProject = path.replace("file://", "")
+            settings.sourceOfLastEditedProject = path.replace(fileManager.getFileUrl(), "")
             fileCreated()
             return true
         }
@@ -42,7 +43,7 @@ Item {
     }
 
     function openFile(path) {
-        settings.sourceOfLastEditedProject = path.replace("file://", "") + '/' + "MAIN.txt"
+        settings.sourceOfLastEditedProject = path.replace(fileManager.getFileUrl(), "") + '/' + "MAIN.txt"
         fileOpened()
     }
 
