@@ -5,7 +5,7 @@ Item {
     id: root
     x: 0
     y: 0
-    width: 200
+    width: parent.width/15
     height: parent.height
     Rectangle {
         id: line
@@ -69,10 +69,13 @@ Item {
 
             anchors.horizontalCenter: parent.horizontalCenter
 
+            width:  root.parent.width / 17
+            height: root.parent.height / 17
+
             textName: name
             imageSource: source
             fillMode: Image.PreserveAspectFit
-            scale: 1.2
+
             onButtonPressed: {
                 name === "Home" ? homeButtonClicked() :
                 name === "Edit" ? editButtonClicked() :

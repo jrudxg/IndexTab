@@ -1,7 +1,20 @@
 #include "include/filemanager.h"
 #include <QStringLiteral>
+#include <include/projectreader.h>
+#include <include/scenedatamodel.h>
 
 FileManager *FileManager::fileManager_Singelton = nullptr;
+
+static ProjectReader *projectReader = nullptr;
+
+
+const void FileManager::readProjectDir(QString projectDir) {
+    QString fileUrl = QStringLiteral(FILE_URL);
+
+    if (projectReader == nullptr) projectReader = new ProjectReader();
+    else SceneDataModel::getInstance()->resetData();
+    projectReader->readDir(projectDir.remove(fileUrl).chopped(9));
+}
 
 QString FileManager::createFolder(QString directory,
                                   QString folderName,

@@ -79,8 +79,8 @@ void TableUtility::generateTable(QQmlComponent *tableComponent, QQuickItem *scen
 
     table->setParentItem(scene);
 
-    QQmlProperty(table, "x").write(map["position"].toList()[0]);
-    QQmlProperty(table, "y").write(map["position"].toList()[1]);
+    QQmlProperty(table, "positionX").write(map["position"].toList()[0]);
+    QQmlProperty(table, "positionY").write(map["position"].toList()[1]);
 
     QQmlProperty(table, "model").write(map["model"]);
 
@@ -94,8 +94,8 @@ void TableUtility::generateTable(QQmlComponent *tableComponent, QQuickItem *scen
     else {
         QVariantList size = qvariant_cast<QVariantList>(map["size"]);
         if (size != QVariantList()) {
-            QQmlProperty(table, "width").write(size[0]);
-            QQmlProperty(table, "height").write(size[1]);
+            QQmlProperty(table, "defaultWidth").write(size[0]);
+            QQmlProperty(table, "defaultHeight").write(size[1]);
         }
     }
 }

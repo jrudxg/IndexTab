@@ -3,23 +3,27 @@ import QtQuick
 Rectangle {
     id: root
 
+    property int positionX
+    property int positionY
+
+    x: positionX * Window.width/1072
+    y: positionY * Window.height/603
+
+    property real scale: 1.0
     property string question: ""
     property string answer: ""
     property string questionDescription: ""
     property string answerDescription: ""
 
-    // approximately 14:9
-    width: 400
-    height: 257
+    property int defaultWidth: 112*scale
+    property int defaultHeight: 72*scale
+
+    width: defaultWidth*Math.min(Window.width, Window.height)/500
+    height: defaultHeight*Math.min(Window.width, Window.height)/500
     color: "white"
 
     property int textYOffset: height/4
     property int textXOffset: width/13
-
-    MouseArea {
-        anchors.fill: parent
-        drag.target: root
-    }
 
     Text {
         id: topText
@@ -29,7 +33,7 @@ Rectangle {
         height:  parent.height/2
         text: root.question
         font.family: "Arial"
-        font.pointSize: 11
+        font.pointSize: 11 * Window.width/2200
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
     }
@@ -42,14 +46,13 @@ Rectangle {
         height: parent.height - y - parent.textYOffset/3
         text: root.questionDescription
         font.family: "Arial"
-        font.pointSize: 9
+        font.pointSize: 9*Window.width/2200
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
     }
 
     MouseArea {
         anchors.fill: parent
-        acceptedButtons: Qt.RightButton
         onClicked: {
             topText.text = (topText.text === root.question ? root.answer : root.question)
             bottomText.text = (bottomText.text === root.questionDescription ? root.answerDescription : root.questionDescription)

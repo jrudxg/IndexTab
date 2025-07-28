@@ -57,9 +57,8 @@ void TextUtility::generateText(QQmlComponent *textComponent, QQuickItem *scene, 
 
     text->setParentItem(scene);
 
-    QQmlProperty(text, "x").write(map["position"].toList()[0]);
-    QQmlProperty(text, "y").write(map["position"].toList()[1]);
-
+    QQmlProperty(text, "positionX").write(map["position"].toList()[0]);
+    QQmlProperty(text, "positionY").write(map["position"].toList()[1]);
     QQmlProperty(text, "textType").write(map["textType"]);
     QQmlProperty(text, "input").write(map["input"]);
     QQmlProperty(text, "imagePath").write(map["imagePath"]);
@@ -70,8 +69,8 @@ void TextUtility::generateText(QQmlComponent *textComponent, QQuickItem *scene, 
     else {
         QVariantList size = qvariant_cast<QVariantList>(map["size"]);
         if (size != QVariantList()) {
-            QQmlProperty(text, "width").write(size[0]);
-            QQmlProperty(text, "height").write(size[1]);
+            QQmlProperty(text, "defaultWidth").write(size[0]);
+            QQmlProperty(text, "defaultHeight").write(size[1]);
         }
     }
 }

@@ -32,13 +32,11 @@ set_source_files_properties(LastProjectModel.qml
     PROPERTIES QT_QML_SINGLETON_TYPE TRUE
 )
 
-
 qt_add_qml_module(IndexTabApp
     URI IndexTab
     VERSION 1.0
     QML_FILES
         Main.qml
-        FileFolder.qml
         Menubar.qml
         HomeScreen.qml
         OpenFolderDialog.qml
@@ -58,7 +56,6 @@ qt_add_qml_module(IndexTabApp
 
     RESOURCES
         resource.qrc
-        SOURCES
 )
 
 

@@ -5,25 +5,27 @@ import sceneData.model
 import QtWebEngine
 import Qt.labs.platform as Platform
 import QtQuick.Dialogs
+import file.manager
 
-Window {
-    width: 3840
-    height: 2160
+ApplicationWindow {
     visible: true
-    title: qsTr("Hello World")
+    title: qsTr("IndexTab")
 
-    visibility: Window.Maximized
+    width: 1072
+    height: 603
 
     Menubar {
         id: menuBar
 
         x: 0
         y: 0
-        width: 200
-        height: parent.height
 
-        onHomeButtonClicked: pageLoader.source = "HomeScreen.qml"
-
+        onHomeButtonClicked: {
+            if (LastProjectModel.projectsFolderLocation === "") {
+                folderDialog.open()
+            }
+            pageLoader.source = "HomeScreen.qml"
+        }
         function loadEditScreenWhenFileExists() {
             if (LastProjectModel.lastEditedProjectsSource === "")
                 pageLoader.sourceComponent = noFileEditScreen
@@ -47,12 +49,6 @@ Window {
         onSettingsButtonClicked: pageLoader.sourceComponent = settingsScreen
     }
 
-    Component.onCompleted: {
-        if (LastProjectModel.projectsFolderLocation === "") {
-            folderDialog.open()
-        }
-    }
-
     FolderDialog {
         id: folderDialog
         title: qsTr("Choose folderpath to create project folder")
@@ -67,10 +63,13 @@ Window {
 
     Loader {
         id: pageLoader
+
         anchors.left: menuBar.right
         width: parent.width - menuBar.width
         height: parent.height
-        source: "HomeScreen.qml"
+        Component.onCompleted: {
+            menuBar.homeButtonClicked()
+        }
     }
 
     Component {
@@ -96,13 +95,19 @@ Window {
         Rectangle {
 
             anchors.fill: parent
-             color: "white"
+            color: "white"
+
+            Component.onDestruction: {
+                LastProjectModel.saveText(textEdit.text)
+                LastProjectModel.saveText(textEdit.text)
+            }
 
 
             Flickable {
                  id: flick
 
-                 width: parent.width; height: parent.height;
+                 width:parent.width;
+                 height: parent.height;
                  contentWidth: textEdit.contentWidth
                  contentHeight: textEdit.contentHeight
                  clip: true
@@ -157,16 +162,9 @@ Window {
                     top: parent.top
                 }
 
-                text: LastProjectModel.lastEditedProjectsSource.substring(0)
-                font.pointSize: 11
+                text: LastProjectModel.lastEditedProjectsSource
+                font.pointSize: 11  * Window.width / 1325
                 color: Qt.lightGray
-            }
-
-            Shortcut {
-                sequence: "Ctrl+S"
-                onActivated: {
-                    LastProjectModel.saveText(textEdit.text)
-                }
             }
 
             Button {
@@ -197,10 +195,65 @@ Window {
 
     Component {
         id: settingsScreen
+
         Rectangle {
+
             color: Qt.lighter("lightgray", 1.1)
             anchors.fill: parent
 
+            ListModel {
+                id: settingsModel
+                ListElement {
+                    name:  "Last edited project source:"
+                    setting: 1
+                }
+                ListElement {
+                    name:  "Project location:"
+                    setting: 2
+                }
+            }
+
+            FileManager {
+                id: fileManager
+            }
+
+            ListView {
+                anchors.fill: parent
+                model: settingsModel
+                spacing: 5 * Window.height / 1000
+                delegate: Row {
+                    required property string name
+                    required property int setting
+                    readonly property string settingValue: setting === 1 ? LastProjectModel.lastEditedProjectsSource.replace(fileManager.getFileUrl(), "")
+                                                                                                                    .substring(0, LastProjectModel.lastEditedProjectsSource.length - 9)
+                                                                         : LastProjectModel.projectsFolderLocation.replace(fileManager.getFileUrl(), "")
+                    Text {id: text; text: name; font.pointSize: 11 * Window.width / 1000}
+                    TextEdit {
+                        id: edit
+                        text: settingValue;
+                        font.pointSize: 11 * Window.width / 1000
+
+                        Component.onCompleted: {
+                            if (width < 100) width = 100
+                        }
+
+                        onWidthChanged: {
+                            if (width < 100) width = 100
+                        }
+
+                        onImplicitHeightChanged: {
+                            if (implicitWidth > 100) width = implicitWidth
+                        }
+                    }
+
+                    spacing: 5 * Window.width / 1000
+
+                    Component.onDestruction: {
+                        if (setting === 1) {LastProjectModel.openFile(edit.text)}
+                        if (setting === 2) LastProjectModel.setSettings(edit.text, "")
+                    }
+                }
+            }
         }
     }
 }

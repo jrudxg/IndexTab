@@ -2,14 +2,13 @@ import QtQuick
 
 Item {
     property int fillMode: Image.Stretch
-    property real pointSize: 13
+    property real pointSize: 13 * width / 100
     required property string imageSource
     required property string textName
     signal buttonPressed
 
     width: parent.width
     height: image.height + itemText.height
-    scale: parent.scale
         Image {
             id: image
             anchors.centerIn: parent

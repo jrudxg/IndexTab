@@ -4,7 +4,7 @@ Rectangle {
     property color backgroundColor: "black"
     id: toolBar
     anchors.left: parent.left
-    width: 300 - line.width
+    width: parent.width/10 - line.width
     height: parent.height
     color: Qt.darker(backgroundColor, 1.05)
 

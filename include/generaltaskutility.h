@@ -4,6 +4,7 @@
 #include <QFile>
 #include <QObject>
 #include <QRegularExpression>
+#include <QSize>
 
 class GeneralTaskUtility : QObject
 {

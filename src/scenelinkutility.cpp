@@ -53,8 +53,8 @@ void SceneLinkUtility::generateSceneLink(QQmlComponent *sceneLinkComponent,
 
     sceneLink->setParentItem(scene);
 
-    QQmlProperty(sceneLink, "x").write(map["position"].toList()[0]);
-    QQmlProperty(sceneLink, "y").write(map["position"].toList()[1]);
+    QQmlProperty(sceneLink, "positionX").write(map["position"].toList()[0]);
+    QQmlProperty(sceneLink, "positionY").write(map["position"].toList()[1]);
     QQmlProperty(sceneLink, "sceneLink").write(map["sceneLink"]);
 
     QVariant scale = map["scale"];
@@ -63,8 +63,8 @@ void SceneLinkUtility::generateSceneLink(QQmlComponent *sceneLinkComponent,
     else {
         QVariantList size = qvariant_cast<QVariantList>(map["size"]);
         if (size != QVariantList()) {
-            QQmlProperty(sceneLink, "width").write(size[0]);
-            QQmlProperty(sceneLink, "height").write(size[1]);
+            QQmlProperty(sceneLink, "defaultWidth").write(size[0]);
+            QQmlProperty(sceneLink, "defaultHeight").write(size[1]);
         }
     }
 }

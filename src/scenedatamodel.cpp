@@ -32,16 +32,11 @@ void SceneDataModel::addElement(QString sceneName,
 
     if (m_sceneComponent == nullptr) {
         QQmlEngine *qmlEngine = qobject_cast<QQmlEngine *>(m_engine);
-
         m_sceneComponent = new QQmlComponent(qmlEngine, QUrl("IndexTab/Scene.qml"));
-        taskComponents[GeneralTaskUtility::taskTypes::Flashcard]
-            = new QQmlComponent(qmlEngine, QUrl("IndexTab/TaskFlashcard.qml"));
-        taskComponents[GeneralTaskUtility::taskTypes::Link]
-            = new QQmlComponent(qmlEngine, QUrl("IndexTab/TaskSceneLink.qml"));
-        taskComponents[GeneralTaskUtility::taskTypes::Table]
-            = new QQmlComponent(qmlEngine, QUrl("IndexTab/TaskTable.qml"));
-        taskComponents[GeneralTaskUtility::taskTypes::Text]
-            = new QQmlComponent(qmlEngine, QUrl("IndexTab/TaskText.qml"));
+        taskComponents[GeneralTaskUtility::taskTypes::Flashcard] = new QQmlComponent(qmlEngine, QUrl("IndexTab/TaskFlashcard.qml"));
+        taskComponents[GeneralTaskUtility::taskTypes::Link] = new QQmlComponent(qmlEngine, QUrl("IndexTab/TaskSceneLink.qml"));
+        taskComponents[GeneralTaskUtility::taskTypes::Table] = new QQmlComponent(qmlEngine, QUrl("IndexTab/TaskTable.qml"));
+        taskComponents[GeneralTaskUtility::taskTypes::Text] = new QQmlComponent(qmlEngine, QUrl("IndexTab/TaskText.qml"));
     }
 
     if (!nameAlreadyExists) {

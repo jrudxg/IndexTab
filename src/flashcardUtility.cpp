@@ -102,8 +102,8 @@ void FlashcardUtility::generateFlashcard(QQmlComponent *flashcardComponent,
     QQuickItem *flashcard = qobject_cast<QQuickItem *>(sceneObj);
     flashcard->setParentItem(scene);
 
-    QQmlProperty(flashcard, "x").write(map["position"].toList()[0]);
-    QQmlProperty(flashcard, "y").write(map["position"].toList()[1]);
+    QQmlProperty(flashcard, "positionX").write(map["position"].toList()[0]);
+    QQmlProperty(flashcard, "positionY").write(map["position"].toList()[1]);
     QQmlProperty(flashcard, "question").write(map["question"]);
     QQmlProperty(flashcard, "answer").write(map["answers"]);
 
@@ -121,8 +121,9 @@ void FlashcardUtility::generateFlashcard(QQmlComponent *flashcardComponent,
     else {
         QVariantList size = qvariant_cast<QVariantList>(map["size"]);
         if (size != QVariantList()) {
-            QQmlProperty(flashcard, "width").write(size[0]);
-            QQmlProperty(flashcard, "height").write(size[1]);
+            qInfo() << size;
+            QQmlProperty(flashcard, "defaultWidth").write(size[0]);
+            QQmlProperty(flashcard, "defaultHeight").write(size[1]);
         }
     }
 }

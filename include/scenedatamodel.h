@@ -38,6 +38,12 @@ public:
 
     static SceneDataModel *getInstance();
 
+    static void resetData() {
+        getInstance()->m_data = QVector<QPair<QString, QQuickItem *>>();
+        getInstance()->m_currentSceneName = "";
+        getInstance()->m_currentScene = nullptr;
+    }
+
 private:
     static SceneDataModel *instance;
     // QObject has to be Scene from Scene.qml

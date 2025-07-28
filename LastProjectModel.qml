@@ -14,7 +14,6 @@ Item {
     signal fileOpened()
     signal fileCreated()
 
-
     function setProjectsFolderLocation(selectedFolder) {
         var mainPath = "file:///" + fileManager.createFolder(selectedFolder, "IndexTab", false);
         var path = "file:///" + fileManager.createFolder(mainPath, "Projects", false)
@@ -23,10 +22,10 @@ Item {
     }
 
 
-    function addNewFile(path)   {
-
+    function addNewFile(path) {
         if (fileModel.addNewFile(path)) {
-            settings.sourceOfLastEditedProject = path.replace(fileManager.getFileUrl(), "")
+            settings.sourceOfLastEditedProject = path.replace(fileManager.getFileUrl(), "") + '/' + "MAIN.txt"
+            fileManager.readProjectDir(settings.sourceOfLastEditedProject)
             fileCreated()
             return true
         }
@@ -43,17 +42,30 @@ Item {
 
     function openFile(path) {
         settings.sourceOfLastEditedProject = path.replace(fileManager.getFileUrl(), "") + '/' + "MAIN.txt"
+        fileManager.readProjectDir(settings.sourceOfLastEditedProject)
         fileOpened()
     }
 
 
     function getText() { return fileModel.getTextFromModelEntry(settings.sourceOfLastEditedProject) }
-    function saveText(text) { return fileModel.saveTextToModelEntry(text, settings.sourceOfLastEditedProject) }
+    function saveText(text) { fileManager.readProjectDir(settings.sourceOfLastEditedProject); return fileModel.saveTextToModelEntry(text, settings.sourceOfLastEditedProject) }
 
     Settings {
         id: settings
         property string projectsLocation: ""
         property string sourceOfLastEditedProject: ""
+    }
+
+    function setSettings(folderLocation = "", lastEditedSource = "") {
+        if (folderLocation !== "") {
+            if (!folderLocation.startsWith(fileManager.getFileUrl())) folderLocation = fileManager.getFileUrl() + folderLocation
+            settings.projectsLocation = folderLocation
+        }
+
+        if (lastEditedSource !== "") {
+            if (!lastEditedSource.startsWith(fileManager.getFileUrl())) lastEditedSource = fileManager.getFileUrl() + lastEditedSource
+            settings.sourceOfLastEditedProject = lastEditedSource + lastEditedProjectsSource[lastEditedProjectsSource.length - 1]
+        }
     }
 
 

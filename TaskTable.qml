@@ -6,21 +6,28 @@ Item {
     property string header: ""
     property TaskTableModel model
 
+    property int positionX
+    property int positionY
+
+    x: positionX * Window.width/1072
+    y: positionY * Window.height/603
+
+
     id: root
 
-    width: 600 * scale
-    height: 361 * scale
+    property int defaultWidth: 300*scale
+    property int defaultHeight: 180*scale
 
-    MouseArea {
-        anchors.fill: parent
-        drag.target: root
-    }
+    width: defaultWidth*Math.min(Window.width, Window.height)/500
+    height: defaultHeight*Math.min(Window.width, Window.height)/500
+
+    signal resetRequested
 
     Text {
         id: tableText
         anchors {
             horizontalCenter: tableView.horizontalCenter
-            top:  parent.top
+            top:  root.top
         }
 
         verticalAlignment: Text.AlignVCenter
@@ -29,10 +36,24 @@ Item {
         width: Text.implicitWidth
         height: Text.implicitHeight
         text: root.header
-
-        font.pointSize: 20 * parent.scale
+        font.pointSize: 20 * Window.width/2200
         font.bold: true
     }
+
+    Text {
+        id: resetButton
+        anchors {
+            top: root.top
+            right: root.right
+        }
+        text: "↻"
+        font.pointSize: 23 * Window.width/2200
+        MouseArea {
+            anchors.fill: parent
+            onClicked: root.resetRequested()
+        }
+    }
+
 
     HorizontalHeaderView {
         id: horizontalHeader
@@ -65,6 +86,8 @@ Item {
 
     }
 
+
+
     TableView {
 
         interactive: false
@@ -85,22 +108,71 @@ Item {
             return parent.height / rows
         }
 
+
         model: root.model
+
         delegate: Rectangle {
-        required property string display
-            border.width: 1
+            required property string display
+            required property int row
+            required property int column
+
+            color: (row+column) % 2 === 0 ? "white" : Qt.lighter("lightgray", 1.15)
+
             MouseArea {
-                acceptedButtons: Qt.RightButton
                 anchors.fill: parent
-                onClicked: if (parent.display[0] !== "$") {
-                    recText.text = recText.text === parent.display ?  "" : parent.display
+                onClicked: if (parent.display[0] !== '$') {
+                    if (recText.text === parent.display) {
+                        parent.color = "white"
+                        recText.text = ""
+                        button_correct.text = ""
+                    } else {
+                        recText.text = parent.display
+                        button_correct.text = '✔'
+                    }
                 }
             }
+
+            Button {
+                id: button_correct
+                onClicked: if (parent.display[0] !== '$' && recText.text === parent.display){
+                    if (text === '←') {
+                        text = '✔'
+                        parent.color = "white"
+                    }
+                    else  {
+                        parent.color = "green"
+                        text = '←'
+                    }
+                }
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                    right: parent.right
+                    rightMargin: 10
+                }
+
+                width: implicitWidth+30
+                height: implicitHeight+30
+
+                font.pointSize: 20 * Window.width/2200
+                background: Qt.transparent
+                Component.onCompleted: {
+                }
+            }
+
+            Connections {
+                target: root
+                onResetRequested: {
+                    recText.text = ""
+                    button_correct.text = ""
+                    color = "white"
+                }
+            }
+
             Text {
                 id: recText
                 anchors.centerIn: parent
+                font: 11 * Window.width/2200
                 text: parent.display[0] === "$" ? parent.display.substring(1,parent.display.length) : ""
-
             }
         }
     }

@@ -26,6 +26,8 @@ public:
 
     Q_INVOKABLE QString getFileUrl();
 
+    Q_INVOKABLE static const void readProjectDir(QString projectDir);
+
     static FileManager *getInstance();
 
 private:

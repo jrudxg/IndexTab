@@ -4,9 +4,20 @@ import sceneData.model
 Rectangle {
     property string sceneLink
     id: root
+    property real scale: 1.0
+    property int positionX
+    property int positionY
 
-    width: 140
-    height: 90
+    x: positionX * Window.width/1072
+    y: positionY * Window.height/603
+
+
+    property int defaultWidth: 80*scale
+    property int defaultHeight: 45*scale
+
+    width: defaultWidth*Math.min(Window.width, Window.height)/500
+    height: defaultHeight*Math.min(Window.width, Window.height)/500
+
     color: "white"
 
     Text {
@@ -16,19 +27,13 @@ Rectangle {
         anchors.centerIn: parent
 
         text: parent.sceneLink
-        font.pointSize: 20
+        font.pointSize: 20*parent*Window.width/2200
         font.underline: true
         color: "blue"
     }
 
     MouseArea {
         anchors.fill: parent
-        drag.target: root
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        acceptedButtons: Qt.RightButton
         onClicked: {
             SceneDataModel.setCurrentScenePerName(sceneLink)
         }

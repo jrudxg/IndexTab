@@ -20,11 +20,12 @@ Item {
 
     ListView {
         id: content
-        width: 1500
-        height: 1200
+        width: (parent.width-toolBar.width)/2
+        height: parent.height
         anchors.right: parent.right
         anchors.top: parent.top
-        anchors.topMargin: 210
+        anchors.topMargin: parent.height/6
+
 
         clip: true
         spacing: 15
@@ -33,7 +34,7 @@ Item {
         model: LastProjectModel.model
 
         delegate: Row {
-            width: 1500
+            width: parent.width
             height: 50
 
             spacing: 5

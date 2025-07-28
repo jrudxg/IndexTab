@@ -2,7 +2,8 @@ import QtQuick
 import sceneData.model
 Item {
     id: root
-    anchors.fill: parent
+    width: parent.width
+    height: parent.height
 
     Rectangle {
         id: background
@@ -19,16 +20,22 @@ Item {
             margins: parent.width > parent.height ? parent.width * 0.02 : parent.height * 0.02
         }
 
+        TextMetrics {
+            id: t_metricts
+            text: text.text
+            font: text.font
+        }
+
         Text {
+            id: text
             anchors {
-                right: parent.right
                 top: workableSpace.top
+                right: workableSpace.right
             }
+            width: t_metricts.tightBoundingRect.width
+            height: t_metricts.tightBoundingRect.height
 
-            width: implicitWidth
-            height:implicitHeight
-
-            font.pointSize: 30
+            font.pointSize: 30 * root.width / 1325
 
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
