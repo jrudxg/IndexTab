@@ -124,7 +124,8 @@ Item {
             focus: true
 
             Component.onCompleted: {
-                loadHtml(root.input, root.imagePath)
+                console.log(root.imagePath)
+                loadHtml(root.input, fileManager.getFileUrl() + root.imagePath)
             }
 
             zoomFactor: Window.width/2500
