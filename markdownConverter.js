@@ -6489,7 +6489,10 @@ var convertMarkdownToHTML = (() => {
               m3.content = l4.slice(h, s2.index + p.length), r.push(m3);
             }
             const w = new e.Token("abbr_open", "abbr", 1);
-            w.attrPush(["title", b[`_${$}`]]), r.push(w);
+            w.attrPush(["class", "custom-tooltip"]);
+            w.attrPush(["data-title", b[`_${$}`]]);
+            r.push(w);
+            //w.attrPush(["title", b[`_${$}`]]), r.push(w);
             const _2 = new e.Token("text", "", 0);
             _2.content = $, r.push(_2);
             const S = new e.Token("abbr_close", "abbr", -1);
@@ -7302,6 +7305,14 @@ ${D.trim()}
     md.use(q);
     md.use(i3);
     md.use(Te);
+
+    md.renderer.rules.abbr = (tokens, idx) => {
+    const content = tokens[idx].content;
+    const title = tokens[idx].title;
+    return `<abbr class="custom-tooltip" data-title="${title}">${content}</abbr>`;
+    };
+
+
     return md.render(text2);
   }
   return __toCommonJS(main_exports);

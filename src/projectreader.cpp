@@ -76,7 +76,8 @@ QString ProjectReader::generateHTMLFromMarkdown(QString markdown)
 
 QString ProjectReader::insertHTMLinHTMLTemplate(QString textToInsert)
 {
-    return HTMLTemplateText.replace("${result}", textToInsert);
+    QString copyOfHTMLTexmplateText = HTMLTemplateText;
+    return copyOfHTMLTexmplateText.replace("${result}", textToInsert);
 }
 
 GeneralTaskUtility::taskTypes getTaskTypeOfString(const QString &line)
@@ -147,7 +148,6 @@ QString ProjectReader::generateObject(GeneralTaskUtility::taskTypes type,
             QString textToBeInserted = generateHTMLFromMarkdown(text);
             text = insertHTMLinHTMLTemplate(textToBeInserted);
         }
-
         TextUtility::setText(text, textType, imagePath, map);
     }
 
@@ -240,6 +240,8 @@ void ProjectReader::readDir(QString path)
         }
         type = GeneralTaskUtility::taskTypes::unknown;
     }
+
+    HTMLTemplateText = "";
 
     file.close();
 

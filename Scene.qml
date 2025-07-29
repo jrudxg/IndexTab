@@ -35,7 +35,7 @@ Item {
             width: t_metricts.tightBoundingRect.width
             height: t_metricts.tightBoundingRect.height
 
-            font.pointSize: 30 * root.width / 1325
+            font.pointSize: 11 * root.width / 1325
 
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter

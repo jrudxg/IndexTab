@@ -61,6 +61,7 @@ void TextUtility::generateText(QQmlComponent *textComponent, QQuickItem *scene, 
     QQmlProperty(text, "positionY").write(map["position"].toList()[1]);
     QQmlProperty(text, "textType").write(map["textType"]);
     QQmlProperty(text, "input").write(map["input"]);
+
     QQmlProperty(text, "imagePath").write(map["imagePath"]);
 
     QVariant scale = map["scale"];

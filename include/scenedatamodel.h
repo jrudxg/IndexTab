@@ -42,6 +42,7 @@ public:
         getInstance()->m_data = QVector<QPair<QString, QQuickItem *>>();
         getInstance()->m_currentSceneName = "";
         getInstance()->m_currentScene = nullptr;
+
     }
 
 private:

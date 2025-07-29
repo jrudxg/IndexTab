@@ -121,7 +121,6 @@ void FlashcardUtility::generateFlashcard(QQmlComponent *flashcardComponent,
     else {
         QVariantList size = qvariant_cast<QVariantList>(map["size"]);
         if (size != QVariantList()) {
-            qInfo() << size;
             QQmlProperty(flashcard, "defaultWidth").write(size[0]);
             QQmlProperty(flashcard, "defaultHeight").write(size[1]);
         }

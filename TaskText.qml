@@ -57,17 +57,17 @@ Item {
 
     onInputChanged: {
         requiredPropertiesLoaded++
-        if (requiredPropertiesLoaded === 3)
+        if (requiredPropertiesLoaded == 3)
         loadedProperties()
     }
     onImagePathChanged: {
         requiredPropertiesLoaded++
-        if (requiredPropertiesLoaded === 3)
+        if (requiredPropertiesLoaded == 3)
         loadedProperties()
     }
     onTextTypeChanged: {
         requiredPropertiesLoaded++
-        if (requiredPropertiesLoaded === 3)
+        if (requiredPropertiesLoaded == 3)
         loadedProperties()
     }
 
@@ -95,10 +95,20 @@ Item {
     Component {
         id: textField
         Text {
+            function nthIndex(str, pat, n){
+                var L= str.length, i= -1;
+                while(n-- && i++<L){
+                    i= str.indexOf(pat, i);
+                    if (i < 0) break;
+                }
+                return i;
+            }
+
             anchors.fill: parent
-            text: root.input
+            text: root.input.trim()
             textFormat: Text.PlainText
-            font.pointSize: 11 * Window.width/2200
+            font.pointSize: nthIndex(root.input.trim(), '\n', 3) === -1 ? 20* Window.width/2200 : 11 * Window.width/2200
+            font.bold: nthIndex(root.input.trim(), '\n', 3) === -1
         }
     }
 
@@ -109,10 +119,12 @@ Item {
     Component {
         id: webEngineView
         WebEngineView {
+            id: view
             anchors.fill: parent
             focus: true
+
             Component.onCompleted: {
-                loadHtml(root.input, fileManager.getFileUrl() + root.imagePath)
+                loadHtml(root.input, root.imagePath)
             }
 
             zoomFactor: Window.width/2500

@@ -33,7 +33,7 @@ Item {
         verticalAlignment: Text.AlignVCenter
         horizontalAlignment: Text.AlignHCenter
 
-        width: Text.implicitWidth
+        width: tableView.width
         height: Text.implicitHeight
         text: root.header
         font.pointSize: 20 * Window.width/2200
@@ -122,7 +122,7 @@ Item {
                 anchors.fill: parent
                 onClicked: if (parent.display[0] !== '$') {
                     if (recText.text === parent.display) {
-                        parent.color = "white"
+                        parent.color = (row+column) % 2 === 0 ? "white" : Qt.lighter("lightgray", 1.15)
                         recText.text = ""
                         button_correct.text = ""
                     } else {
@@ -137,7 +137,7 @@ Item {
                 onClicked: if (parent.display[0] !== '$' && recText.text === parent.display){
                     if (text === '←') {
                         text = '✔'
-                        parent.color = "white"
+                        parent.color = (row+column) % 2 === 0 ? "white" : Qt.lighter("lightgray", 1.15)
                     }
                     else  {
                         parent.color = "green"
@@ -145,15 +145,15 @@ Item {
                     }
                 }
                 anchors {
-                    verticalCenter: parent.verticalCenter
                     right: parent.right
-                    rightMargin: 10
+                    verticalCenter: parent.verticalCenter
+                    rightMargin: 10 * Window.width/2200
                 }
 
-                width: implicitWidth+30
-                height: implicitHeight+30
+                width: implicitWidth
+                height: implicitHeight
 
-                font.pointSize: 20 * Window.width/2200
+                font.pointSize: 13 * Window.width/2200
                 background: Qt.transparent
                 Component.onCompleted: {
                 }
@@ -170,9 +170,11 @@ Item {
 
             Text {
                 id: recText
-                anchors.centerIn: parent
-                font: 11 * Window.width/2200
+                anchors.fill: parent
+                font: 7 * Window.width/2200
                 text: parent.display[0] === "$" ? parent.display.substring(1,parent.display.length) : ""
+                verticalAlignment: Text.AlignVCenter
+                anchors.leftMargin:  5 * Window.width/2200
             }
         }
     }

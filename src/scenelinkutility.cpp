@@ -9,7 +9,7 @@
 
 const std::function<bool(QString, QVariantMap &)> SceneLinkUtility::mapN = [](QString line,
                                                                               QVariantMap &map) {
-    map["sceneLink"] = line.mid(3);
+    map["sceneLink"] = line.mid(3).trimmed();
     return true;
 };
 
