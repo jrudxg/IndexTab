@@ -27,7 +27,7 @@ Rectangle {
         anchors.centerIn: parent
 
         text: parent.sceneLink
-        font.pointSize: 20*parent*Window.width/2200
+        font.pointSize: Math.floor(20*parent*Window.width/2200 + 1)
         font.underline: true
         color: "blue"
     }

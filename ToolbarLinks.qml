@@ -64,7 +64,7 @@ is still in progress
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             color: "white"
-            font.pointSize: 11 * bottomList.width / 100
+            font.pointSize: Math.floor(11 * bottomList.width / 100 + 1)
             font.underline: true
         }
     }

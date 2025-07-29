@@ -2,8 +2,6 @@ import QtQuick
 import sceneData.model
 Item {
     id: root
-    width: parent.width
-    height: parent.height
 
     Rectangle {
         id: background
@@ -35,7 +33,7 @@ Item {
             width: t_metricts.tightBoundingRect.width
             height: t_metricts.tightBoundingRect.height
 
-            font.pointSize: 11 * root.width / 1325
+            font.pointSize: Math.floor(11 * root.width / 1325 + 1)
 
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter

@@ -2,7 +2,7 @@ import QtQuick
 
 Item {
     property int fillMode: Image.Stretch
-    property real pointSize: 13 * width / 100
+    property real pointSize: Math.ceil(13 * width / 100)
     required property string imageSource
     required property string textName
     signal buttonPressed

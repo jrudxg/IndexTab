@@ -36,7 +36,7 @@ Item {
         width: tableView.width
         height: Text.implicitHeight
         text: root.header
-        font.pointSize: 20 * Window.width/2200
+        font.pointSize: Math.floor(20 * Window.width/2200 + 1)
         font.bold: true
     }
 
@@ -47,7 +47,7 @@ Item {
             right: root.right
         }
         text: "↻"
-        font.pointSize: 23 * Window.width/2200
+        font.pointSize: Math.floor(23 * Window.width/2200 + 1)
         MouseArea {
             anchors.fill: parent
             onClicked: root.resetRequested()
@@ -144,7 +144,7 @@ Item {
                 width: implicitWidth
                 height: implicitHeight
 
-                font.pointSize: 13 * Window.width/2200
+                font.pointSize: Math.floor(13 * Window.width/2200 + 1)
 
                 MouseArea {
                     anchors.fill: parent
@@ -161,19 +161,16 @@ Item {
                 }
             }
 
-            Connections {
-                target: root
-                onResetRequested: {
-                    recText.text = ""
-                    button_correct.text = ""
-                    color = "white"
-                }
+            function onResetRequested() {
+                recText.text = ""
+                button_correct.text = ""
+                color = "white"
             }
 
             Text {
                 id: recText
                 anchors.fill: parent
-                font: 7 * Window.width/2200
+                font: Math.floor(7 * Window.width/2200 + 1)
                 text: parent.display[0] === "$" ? parent.display.substring(1,parent.display.length) : ""
                 verticalAlignment: Text.AlignVCenter
                 anchors.leftMargin:  5 * Window.width/2200

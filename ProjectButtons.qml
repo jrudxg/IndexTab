@@ -31,7 +31,7 @@ ListView {
         anchors.horizontalCenter: parent.horizontalCenter
 
         text: name
-        font.pointSize: 11 * parent.width / 150
+        font.pointSize: Math.floor(11 * parent.width / 150 + 1)
 
         onClicked: name === "Create Project" ?
         createProjectDialog.open(".txt") :  openProjectDialog.open()

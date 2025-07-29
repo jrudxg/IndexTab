@@ -107,7 +107,7 @@ Item {
             anchors.fill: parent
             text: root.input.trim()
             textFormat: Text.PlainText
-            font.pointSize: nthIndex(root.input.trim(), '\n', 3) === -1 ? 20* Window.width/2200 : 11 * Window.width/2200
+            font.pointSize: nthIndex(root.input.trim(), '\n', 3) === -1 ? Math.floor(20* Window.width/2200 + 1) : Math.floor(11 * Window.width/2200 + 1)
             font.bold: nthIndex(root.input.trim(), '\n', 3) === -1
         }
     }
@@ -124,7 +124,6 @@ Item {
             focus: true
 
             Component.onCompleted: {
-                console.log(root.imagePath)
                 loadHtml(root.input, fileManager.getFileUrl() + root.imagePath)
             }
 

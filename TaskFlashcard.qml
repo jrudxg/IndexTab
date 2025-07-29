@@ -33,7 +33,7 @@ Rectangle {
         height:  parent.height/2
         text: root.question
         font.family: "Arial"
-        font.pointSize: 11 * Window.width/2200
+        font.pointSize: Math.floor(11 * Window.width/2200 + 1)
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
     }
@@ -46,7 +46,7 @@ Rectangle {
         height: parent.height - y - parent.textYOffset/3
         text: root.questionDescription
         font.family: "Arial"
-        font.pointSize: 9*Window.width/2200
+        font.pointSize: Math.floor(9*Window.width/2200 + 1)
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
     }

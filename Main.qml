@@ -163,7 +163,7 @@ ApplicationWindow {
                 }
 
                 text: LastProjectModel.lastEditedProjectsSource
-                font.pointSize: 11  * Window.width / 1325
+                font.pointSize: Math.floor(11  * Window.width / 1325)
                 color: Qt.lightGray
             }
 
@@ -189,6 +189,7 @@ ApplicationWindow {
     Component {
         id: playScreen
         Loader {
+            anchors.fill: parent
             data: SceneDataModel.currentScene
         }
     }
@@ -227,11 +228,11 @@ ApplicationWindow {
                     readonly property string settingValue: setting === 1 ? LastProjectModel.lastEditedProjectsSource.replace(fileManager.getFileUrl(), "")
                                                                                                                     .substring(0, LastProjectModel.lastEditedProjectsSource.length - 9)
                                                                          : LastProjectModel.projectsFolderLocation.replace(fileManager.getFileUrl(), "")
-                    Text {id: text; text: name; font.pointSize: 11 * Window.width / 1000}
+                    Text {id: text; text: name; font.pointSize: Math.floor(11 * Window.width / 1000 + 1)}
                     TextEdit {
                         id: edit
                         text: settingValue;
-                        font.pointSize: 11 * Window.width / 1000
+                        font.pointSize: Math.floor(11 * Window.width / 1000 + 1)
 
                         Component.onCompleted: {
                             if (width < 100) width = 100
