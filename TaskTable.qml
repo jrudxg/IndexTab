@@ -132,18 +132,9 @@ Item {
                 }
             }
 
-            Button {
+            Text {
                 id: button_correct
-                onClicked: if (parent.display[0] !== '$' && recText.text === parent.display){
-                    if (text === '←') {
-                        text = '✔'
-                        parent.color = (row+column) % 2 === 0 ? "white" : Qt.lighter("lightgray", 1.15)
-                    }
-                    else  {
-                        parent.color = "green"
-                        text = '←'
-                    }
-                }
+
                 anchors {
                     right: parent.right
                     verticalCenter: parent.verticalCenter
@@ -154,8 +145,19 @@ Item {
                 height: implicitHeight
 
                 font.pointSize: 13 * Window.width/2200
-                background: Qt.transparent
-                Component.onCompleted: {
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: if (parent.parent.display[0] !== '$' && recText.text === parent.parent.display){
+                        if (parent.text === '←') {
+                            parent.text = '✔'
+                            parent.parent.color = (parent.parent.row + parent.parent.column) % 2 === 0 ? "white" : Qt.lighter("lightgray", 1.15)
+                        }
+                        else  {
+                            parent.parent.color = "green"
+                            parent.text = '←'
+                        }
+                    }
                 }
             }
 
