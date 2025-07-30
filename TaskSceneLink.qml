@@ -2,21 +2,23 @@ import QtQuick
 import sceneData.model
 
 Rectangle {
-    property string sceneLink
     id: root
+
+    property string sceneLink
     property real scale: 1.0
-    property int positionX
-    property int positionY
 
-    x: positionX * Window.width/1072
-    y: positionY * Window.height/603
+    property real defaultWidth: 120*scale
+    property real defaultHeight: 68*scale
+
+    property real defaultX
+    property real defaultY
 
 
-    property int defaultWidth: 80*scale
-    property int defaultHeight: 45*scale
+    width: defaultWidth*parent.scaleFactor
+    height: defaultHeight*parent.scaleFactor
 
-    width: defaultWidth*Math.min(Window.width, Window.height)/500
-    height: defaultHeight*Math.min(Window.width, Window.height)/500
+    x: defaultX*parent.scaleFactor
+    y: defaultY*parent.scaleFactor
 
     color: "white"
 
@@ -27,7 +29,7 @@ Rectangle {
         anchors.centerIn: parent
 
         text: parent.sceneLink
-        font.pointSize: Math.floor(20*parent*Window.width/2200 + 1)
+        font.pointSize: Math.floor(9 * root.parent.scaleFactor + 1)
         font.underline: true
         color: "blue"
     }

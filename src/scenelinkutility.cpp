@@ -53,8 +53,8 @@ void SceneLinkUtility::generateSceneLink(QQmlComponent *sceneLinkComponent,
 
     sceneLink->setParentItem(scene);
 
-    QQmlProperty(sceneLink, "positionX").write(map["position"].toList()[0]);
-    QQmlProperty(sceneLink, "positionY").write(map["position"].toList()[1]);
+    QQmlProperty(sceneLink, "defaultX").write(map["position"].toList()[0]);
+    QQmlProperty(sceneLink, "defaultY").write(map["position"].toList()[1]);
     QQmlProperty(sceneLink, "sceneLink").write(map["sceneLink"]);
 
     QVariant scale = map["scale"];

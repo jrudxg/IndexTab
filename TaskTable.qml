@@ -2,24 +2,26 @@ import QtQuick
 import table.model
 import QtQuick.Controls
 Item {
+    id: root
+
     property real scale: 1.0
     property string header: ""
     property TaskTableModel model
 
-    property int positionX
-    property int positionY
 
-    x: positionX * Window.width/1072
-    y: positionY * Window.height/603
+    property real defaultWidth: 375*scale
+    property real defaultHeight: 225*scale
+
+    property real defaultX
+    property real defaultY
 
 
-    id: root
+    width: defaultWidth*parent.scaleFactor
+    height: defaultHeight*parent.scaleFactor
 
-    property int defaultWidth: 300*scale
-    property int defaultHeight: 180*scale
+    x: defaultX*parent.scaleFactor
+    y: defaultY*parent.scaleFactor
 
-    width: defaultWidth*Math.min(Window.width, Window.height)/500
-    height: defaultHeight*Math.min(Window.width, Window.height)/500
 
     signal resetRequested
 
@@ -36,7 +38,7 @@ Item {
         width: tableView.width
         height: Text.implicitHeight
         text: root.header
-        font.pointSize: Math.floor(20 * Window.width/2200 + 1)
+        font.pointSize: Math.floor(9 * root.parent.scaleFactor + 1)
         font.bold: true
     }
 
@@ -44,10 +46,12 @@ Item {
         id: resetButton
         anchors {
             top: root.top
-            right: root.right
+            right: tableView.right
+            rightMargin: 5 * root.parent.scaleFactor
         }
         text: "↻"
-        font.pointSize: Math.floor(23 * Window.width/2200 + 1)
+        font.pointSize: Math.floor(11 * root.parent.scaleFactor + 1)
+
         MouseArea {
             anchors.fill: parent
             onClicked: root.resetRequested()
@@ -138,13 +142,13 @@ Item {
                 anchors {
                     right: parent.right
                     verticalCenter: parent.verticalCenter
-                    rightMargin: 10 * Window.width/2200
+                    rightMargin: 5 * root.parent.scaleFactor
                 }
 
                 width: implicitWidth
                 height: implicitHeight
 
-                font.pointSize: Math.floor(13 * Window.width/2200 + 1)
+                font.pointSize: Math.floor(5 * root.parent.scaleFactor + 1)
 
                 MouseArea {
                     anchors.fill: parent
@@ -161,19 +165,22 @@ Item {
                 }
             }
 
-            function onResetRequested() {
-                recText.text = ""
-                button_correct.text = ""
-                color = "white"
+            Connections {
+                target: root
+                function onResetRequested() {
+                    recText.text = ""
+                    button_correct.text = ""
+                    color = (row+column) % 2 === 0 ? "white" : Qt.lighter("lightgray", 1.15)
+                }
             }
 
             Text {
                 id: recText
                 anchors.fill: parent
-                font: Math.floor(7 * Window.width/2200 + 1)
+                font.pointSize: Math.floor(4 *root.parent.scaleFactor + 1)
                 text: parent.display[0] === "$" ? parent.display.substring(1,parent.display.length) : ""
                 verticalAlignment: Text.AlignVCenter
-                anchors.leftMargin:  5 * Window.width/2200
+                anchors.leftMargin:  3 * root.parent.scaleFactor
             }
         }
     }

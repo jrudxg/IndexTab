@@ -18,6 +18,7 @@ void SceneDataModel::addElement(QString sceneName,
                                 GeneralTaskUtility::taskTypes type,
                                 QVariantMap &map)
 {
+
     bool nameAlreadyExists = false;
     QQuickItem *neededScene;
 
@@ -81,7 +82,7 @@ QString SceneDataModel::currentSceneName()
 
 QQuickItem *SceneDataModel::currentScene()
 {
-    return m_currentScene;
+    return *m_currentSceneIt;
 }
 
 SceneDataModel *SceneDataModel::getInstance()
@@ -97,10 +98,14 @@ bool SceneDataModel::setCurrentScenePerName(QString newSceneName)
                                       [&](const auto &scene) {
                                           return scene.first == adjustedSceneName;
                                       });
-        it != m_data.end()) {
-        m_currentScene = it->second;
+
+    it != m_data.end()) {
+        if (std::next(m_currentSceneIt) != sceneHistory.end()) sceneHistory.erase(std::next(m_currentSceneIt), sceneHistory.end());
+        sceneHistory.push_back(it->second);
+        m_currentSceneIt = std::prev(sceneHistory.end());
         emit currentSceneChanged();
         setCurrentSceneName(adjustedSceneName);
+
         return true;
     }
     return false;
@@ -108,10 +113,13 @@ bool SceneDataModel::setCurrentScenePerName(QString newSceneName)
 
 void SceneDataModel::setCurrentScene(QObject *scene)
 {
-    m_currentScene = qobject_cast<QQuickItem *>(scene);
+    if (std::next(m_currentSceneIt) != sceneHistory.end()) sceneHistory.erase(std::next(m_currentSceneIt), sceneHistory.end());
+    sceneHistory.push_back(qobject_cast<QQuickItem*>(scene));
+    m_currentSceneIt = std::prev(sceneHistory.end());
     emit currentSceneChanged();
+
     setCurrentSceneName(std::find_if(m_data.begin(), m_data.end(), [&](const auto &potentialScene) {
-                            return potentialScene.second == m_currentScene;
+                            return potentialScene.second == *m_currentSceneIt;
                         })->first);
 }
 
@@ -119,4 +127,28 @@ void SceneDataModel::setCurrentSceneName(QString name)
 {
     m_currentSceneName = name.trimmed();
     emit currentSceneNameChanged();
+}
+
+bool SceneDataModel::goBackInSceneHistory() {
+    if (m_currentSceneIt == sceneHistory.begin()) return true;
+    m_currentSceneIt = std::prev(m_currentSceneIt);
+    emit currentSceneChanged();
+
+    setCurrentSceneName(std::find_if(m_data.begin(), m_data.end(), [&](const auto &potentialScene) {
+                            return potentialScene.second == *m_currentSceneIt;
+                        })->first);
+    return std::prev(m_currentSceneIt) == sceneHistory.begin();
+}
+
+bool SceneDataModel::goForwardInSceneHistory() {
+    if (auto nextIt = std::next(m_currentSceneIt); nextIt != sceneHistory.end()) {
+        m_currentSceneIt = nextIt;
+        emit currentSceneChanged();
+
+        setCurrentSceneName(std::find_if(m_data.begin(), m_data.end(), [&](const auto &potentialScene) {
+                                return potentialScene.second == *m_currentSceneIt;
+                            })->first);
+        return std::next(m_currentSceneIt) == sceneHistory.end();
+    }
+    return true;
 }

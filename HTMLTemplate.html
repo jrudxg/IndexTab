@@ -353,37 +353,37 @@ https://www.npmjs.com/package/generate-license-file
 
 
     <style>
-    .custom-tooltip {
-      position: relative;
-      cursor: help;
-      text-decoration: underline;
-      text-decoration-style: dotted;
-      text-decoration-thickness: 1px;
-      text-underline-offset: 2px;
-    }
+        .custom-tooltip {
+	  position: relative;
+	  cursor: help;
+	  text-decoration: underline;
+	  text-decoration-style: dashed;
+	  text-decoration-thickness: 1px;
+	  text-underline-offset: 2px;
+	}
 
-    .custom-tooltip::after {
-      content: attr(data-title);
-      position: absolute;
-      bottom: 50%;
-      left: 0;
-      background: #333;
-      color: #fff;
-      padding: 5px 8px;
-      border-radius: 5px;
-      white-space: nowrap;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      pointer-events: none;
-      z-index: 1000;
-    }
+        .custom-tooltip::after {
+	  content: attr(data-title);
+	  position: absolute;
+	  bottom: 60%;
+	  left: 0;
+	  background: #333;
+	  color: #fff;
+	  padding: 5px 8px;
+	  border-radius: 5px;
+	  white-space: nowrap;
+	  opacity: 0;
+	  transition: opacity 0.3s ease;
+	  pointer-events: none;
+	  z-index: 1000;
+	}
 
-    .custom-tooltip:hover::after {
-      opacity: 1;
-    }
+        .custom-tooltip:hover::after {
+	  opacity: 1;
+	}
 
 
-          body {
+            body {
 	    font-family: Arial, sans-serif;
 	  }
 

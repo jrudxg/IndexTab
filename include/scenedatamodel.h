@@ -6,6 +6,7 @@
 #include <QQmlComponent>
 #include <QQmlEngine>
 #include <QQuickItem>
+#include <list>
 #include "include/generaltaskutility.h"
 
 class SceneDataModel : public QObject
@@ -39,24 +40,29 @@ public:
     static SceneDataModel *getInstance();
 
     static void resetData() {
-        getInstance()->m_data = QVector<QPair<QString, QQuickItem *>>();
-        getInstance()->m_currentSceneName = "";
-        getInstance()->m_currentScene = nullptr;
-
+        getInstance()->m_data.clear();
+        getInstance()->m_currentSceneName.clear();
+        getInstance()->sceneHistory.clear();
+        getInstance()->m_currentSceneIt = getInstance()->sceneHistory.begin();
     }
+    //returns whether currentSceneIt is the last element
+    Q_INVOKABLE bool goForwardInSceneHistory();
+    //returns whether currentSceneIt is the first element
+    Q_INVOKABLE bool goBackInSceneHistory();
 
 private:
     static SceneDataModel *instance;
     // QObject has to be Scene from Scene.qml
-    QVector<QPair<QString, QQuickItem *>> m_data;
-
-    QQuickItem *m_currentScene = nullptr;
+    QVector<QPair<QString, QQuickItem*>> m_data;
 
     QString m_currentSceneName;
 
     QQmlComponent *m_sceneComponent = nullptr;
 
     QQmlApplicationEngine *m_engine;
+
+    std::list<QQuickItem*> sceneHistory{};
+    std::list<QQuickItem*>::iterator m_currentSceneIt = sceneHistory.begin();
 
     // can't be out of bounds
     static const QMap<

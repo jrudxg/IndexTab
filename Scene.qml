@@ -1,43 +1,42 @@
 import QtQuick
 import sceneData.model
-Item {
+
+Rectangle {
     id: root
-
-    Rectangle {
-        id: background
-
-        anchors.fill: parent
-
-        color: "lightgray"
+    anchors {
+        top: parent.top
+        left: parent.left
     }
 
-    Item {
-        id: workableSpace
+    color: "lightgray"
+    property real scaleFactor: Math.min(parent.width / baseWidth, parent.height / baseHeight)
+
+    readonly property real baseWidth: 1000.5333
+    readonly property real baseHeight: 603
+
+    width: baseWidth * scaleFactor
+    height: baseHeight * scaleFactor
+
+    TextMetrics {
+        id: t_metricts
+        text: text.text
+        font: text.font
+    }
+
+    Text {
+        id: text
         anchors {
-            fill: parent
+            top: parent.top
+            right: parent.right
             margins: parent.width > parent.height ? parent.width * 0.02 : parent.height * 0.02
         }
+        width: t_metricts.tightBoundingRect.width
+        height: t_metricts.tightBoundingRect.height
 
-        TextMetrics {
-            id: t_metricts
-            text: text.text
-            font: text.font
-        }
+        font.pointSize: Math.floor(11 * parent.width / baseWidth + 1)
 
-        Text {
-            id: text
-            anchors {
-                top: workableSpace.top
-                right: workableSpace.right
-            }
-            width: t_metricts.tightBoundingRect.width
-            height: t_metricts.tightBoundingRect.height
-
-            font.pointSize: Math.floor(11 * root.width / 1325 + 1)
-
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            text: SceneDataModel.currentSceneName
-        }
+        horizontalAlignment: Text.AlignHCenter
+        verticalAlignment: Text.AlignVCenter
+        text: SceneDataModel.currentSceneName
     }
 }

@@ -100,10 +100,11 @@ void FlashcardUtility::generateFlashcard(QQmlComponent *flashcardComponent,
 {
     QObject *sceneObj = flashcardComponent->create();
     QQuickItem *flashcard = qobject_cast<QQuickItem *>(sceneObj);
+
     flashcard->setParentItem(scene);
 
-    QQmlProperty(flashcard, "positionX").write(map["position"].toList()[0]);
-    QQmlProperty(flashcard, "positionY").write(map["position"].toList()[1]);
+    QQmlProperty(flashcard, "defaultX").write(map["position"].toList()[0]);
+    QQmlProperty(flashcard, "defaultY").write(map["position"].toList()[1]);
     QQmlProperty(flashcard, "question").write(map["question"]);
     QQmlProperty(flashcard, "answer").write(map["answers"]);
 

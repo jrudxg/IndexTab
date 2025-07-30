@@ -57,8 +57,8 @@ void TextUtility::generateText(QQmlComponent *textComponent, QQuickItem *scene, 
 
     text->setParentItem(scene);
 
-    QQmlProperty(text, "positionX").write(map["position"].toList()[0]);
-    QQmlProperty(text, "positionY").write(map["position"].toList()[1]);
+    QQmlProperty(text, "defaultX").write(map["position"].toList()[0]);
+    QQmlProperty(text, "defaultY").write(map["position"].toList()[1]);
     QQmlProperty(text, "textType").write(map["textType"]);
     QQmlProperty(text, "input").write(map["input"]);
 

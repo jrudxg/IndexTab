@@ -163,7 +163,7 @@ ApplicationWindow {
                 }
 
                 text: LastProjectModel.lastEditedProjectsSource
-                font.pointSize: Math.floor(11  * Window.width / 1325)
+                font.pointSize: Math.floor(11  * Window.width / 1325 + 1)
                 color: Qt.lightGray
             }
 
@@ -188,9 +188,31 @@ ApplicationWindow {
 
     Component {
         id: playScreen
-        Loader {
+        Rectangle {
             anchors.fill: parent
-            data: SceneDataModel.currentScene
+            color: "white"
+
+            Loader {
+                anchors.fill: parent
+                data: SceneDataModel.currentScene
+            }
+
+            Row {
+                anchors.top: parent.top
+                anchors.left: parent.left
+                Button {
+                    text: "◀"
+                    font.pointSize: Math.floor(11  * Window.width / 1325 + 1)
+                    onClicked: SceneDataModel.goBackInSceneHistory()
+                    background.visible: false
+                }
+                Button {
+                    text: "▶"
+                    font.pointSize: Math.floor(11  * Window.width / 1325 + 1)
+                    onClicked: SceneDataModel.goForwardInSceneHistory()
+                    background.visible: false
+                }
+            }
         }
     }
 

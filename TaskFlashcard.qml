@@ -3,23 +3,26 @@ import QtQuick
 Rectangle {
     id: root
 
-    property int positionX
-    property int positionY
-
-    x: positionX * Window.width/1072
-    y: positionY * Window.height/603
-
-    property real scale: 1.0
     property string question: ""
     property string answer: ""
     property string questionDescription: ""
     property string answerDescription: ""
 
-    property int defaultWidth: 112*scale
-    property int defaultHeight: 72*scale
+    property real scale: 1.0
 
-    width: defaultWidth*Math.min(Window.width, Window.height)/500
-    height: defaultHeight*Math.min(Window.width, Window.height)/500
+    property real defaultWidth: 168*scale
+    property real defaultHeight: 108*scale
+
+    property real defaultX
+    property real defaultY
+
+
+    width: defaultWidth*parent.scaleFactor
+    height: defaultHeight*parent.scaleFactor
+
+    x: defaultX*parent.scaleFactor
+    y: defaultY*parent.scaleFactor
+
     color: "white"
 
     property int textYOffset: height/4
@@ -33,7 +36,7 @@ Rectangle {
         height:  parent.height/2
         text: root.question
         font.family: "Arial"
-        font.pointSize: Math.floor(11 * Window.width/2200 + 1)
+        font.pointSize: Math.floor(6 * root.parent.scaleFactor + 1)
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
     }
@@ -46,7 +49,7 @@ Rectangle {
         height: parent.height - y - parent.textYOffset/3
         text: root.questionDescription
         font.family: "Arial"
-        font.pointSize: Math.floor(9*Window.width/2200 + 1)
+        font.pointSize: Math.floor(4 * root.parent.scaleFactor + 1)
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
     }

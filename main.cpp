@@ -83,16 +83,13 @@ int main(int argc, char *argv[])
         }
 
     }
-
     FileManager::readProjectDir(filePath);
-
 
     QQuickWebEngineProfile *profile = QQuickWebEngineProfile::defaultProfile();
 
     QObject::connect(&app, &QCoreApplication::aboutToQuit, []() {
         QTimer::singleShot(0, []() { delete QQuickWebEngineProfile::defaultProfile(); });
     });
-
     engine.loadFromModule("IndexTab", "Main");
     return app.exec();
 }

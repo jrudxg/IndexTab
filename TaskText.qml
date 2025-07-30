@@ -39,13 +39,6 @@ Item {
        Markdown uses markdown-it (https://github.com/markdown-it/markdown-it) with many plugins and renders the text using WebEngineView
     */
 
-    property int positionX
-    property int positionY
-
-    x: positionX * Window.width/1072
-    y: positionY * Window.height/603
-
-
     enum TextTypeEnum {
         PlainText,
         Markdown,
@@ -74,13 +67,22 @@ Item {
     property string input: ""
     property string imagePath: ""
     property int textType: TaskText.TextTypeEnum.None
+
     property real scale: 1
 
-    property int defaultWidth: 250*scale
-    property int defaultHeight: 250*scale
+    property real defaultX
+    property real defaultY
 
-    width: defaultWidth*Math.min(Window.width, Window.height)/500
-    height: defaultHeight*Math.min(Window.width, Window.height)/500
+    property real defaultWidth: 400*scale
+    property real defaultHeight: 400*scale
+
+
+    x: defaultX * parent.scaleFactor
+    y: defaultY * parent.scaleFactor
+
+    width: defaultWidth * parent.scaleFactor
+    height: defaultHeight * parent.scaleFactor
+
 
     onLoadedProperties: {
         root.textType === TaskText.TextTypeEnum.Markdown ? loader.sourceComponent = webEngineView : loader.sourceComponent = textField;
@@ -107,7 +109,7 @@ Item {
             anchors.fill: parent
             text: root.input.trim()
             textFormat: Text.PlainText
-            font.pointSize: nthIndex(root.input.trim(), '\n', 3) === -1 ? Math.floor(20* Window.width/2200 + 1) : Math.floor(11 * Window.width/2200 + 1)
+            font.pointSize: nthIndex(root.input.trim(), '\n', 3) === -1 ? Math.floor(10 * root.parent.scaleFactor + 1) : Math.floor(11 * root.parent.scaleFactor + 1)
             font.bold: nthIndex(root.input.trim(), '\n', 3) === -1
         }
     }
@@ -121,13 +123,12 @@ Item {
         WebEngineView {
             id: view
             anchors.fill: parent
+            zoomFactor: root.parent.scaleFactor/1.5
             focus: true
 
             Component.onCompleted: {
                 loadHtml(root.input, fileManager.getFileUrl() + root.imagePath)
             }
-
-            zoomFactor: Window.width/2500
 
             onNavigationRequested: function(request) {
                 var url = request.url.toString()

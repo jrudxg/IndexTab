@@ -59,6 +59,7 @@ const std::function<bool(QString, QVariantMap &)> TableUtility::mapR = [](QStrin
 const QMultiMap<QString, std::function<bool(QString, QVariantMap &)>> TableUtility::dictionary
     = {{"H::", mapH}, {"S::", mapS}, {"P::", mapP}};
 
+
 const void TableUtility::addRowsToValuesAndDictionary(
     QVector<QString> *requiredValues,
     QMultiMap<QString, std::function<bool(QString, QVariantMap &)>> *dictionary,
@@ -79,8 +80,8 @@ void TableUtility::generateTable(QQmlComponent *tableComponent, QQuickItem *scen
 
     table->setParentItem(scene);
 
-    QQmlProperty(table, "positionX").write(map["position"].toList()[0]);
-    QQmlProperty(table, "positionY").write(map["position"].toList()[1]);
+    QQmlProperty(table, "defaultX").write(map["position"].toList()[0]);
+    QQmlProperty(table, "defaultY").write(map["position"].toList()[1]);
 
     QQmlProperty(table, "model").write(map["model"]);
 
